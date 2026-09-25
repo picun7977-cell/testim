@@ -6,7 +6,7 @@
 <title>Казино «Изумруд»</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Limelight&family=Figtree:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Limelight&family=Russo+One&family=Figtree:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@500;600&display=swap">
 <style>
 :root {
   color-scheme: dark;
@@ -81,7 +81,58 @@ button:disabled { cursor: not-allowed; opacity: .5; }
 .ghost:hover { border-color: var(--brass); color: var(--brass-hi); }
 
 /* ---------- tabs ---------- */
-.tabs { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
+.tabs { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; }
+.tab { position: relative; }
+.tab .badge { position: absolute; top: -8px; right: 10px; font-family: "Russo One", var(--body); font-size: 10px; letter-spacing: .08em; padding: 2px 8px; border-radius: 999px; background: #ff4d8a; color: #fff; box-shadow: 0 0 12px rgba(255,77,138,.6); }
+
+/* ---------- meters ---------- */
+.meters { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.meter { padding: 10px 14px; border-radius: 14px; border: 1px solid var(--line); background: rgba(3,16,11,.35); display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.m-top { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; font-size: 13px; color: var(--muted); }
+.m-top b { color: var(--ivory); font-family: var(--mono); font-variant-numeric: tabular-nums; }
+.meter small { font-size: 11.5px; color: var(--muted); line-height: 1.35; }
+.bar { height: 8px; border-radius: 99px; background: rgba(0,0,0,.4); overflow: hidden; }
+.bar i { display: block; height: 100%; width: 0; border-radius: inherit; background: linear-gradient(90deg, var(--brass-lo), var(--brass-hi)); transition: width .6s; }
+.heat .bar i { background: linear-gradient(90deg, #c2303a, #ff9a3c, #ffe08a); }
+.heat.hot { border-color: #ff9a3c; animation: hotpulse .9s ease-in-out infinite alternate; }
+.heat.hot .m-top b { color: #ffb35c; }
+@keyframes hotpulse { to { box-shadow: 0 0 18px rgba(255,154,60,.45); } }
+.jp .m-top b { color: var(--brass-hi); }
+.lvl-badge { display: inline-grid; place-items: center; min-width: 26px; height: 22px; padding: 0 6px; border-radius: 999px; background: var(--brass); color: #2a1a05; font-family: var(--mono); font-weight: 600; font-size: 12px; }
+
+/* ---------- fruit storm ---------- */
+.ticker { min-width: 0; max-width: 100%; overflow: hidden; white-space: nowrap; border-radius: 10px; background: rgba(0,0,0,.28); padding-block: 6px; font-family: "Russo One", var(--display); letter-spacing: .06em; color: #ffe08a; }
+.ticker span { display: inline-block; padding-left: 100%; animation: ticker 16s linear infinite; }
+@keyframes ticker { to { transform: translateX(-100%); } }
+.storm-wrap { position: relative; align-self: center; width: min(100%, 560px); padding: 14px; border-radius: 24px;
+  background: linear-gradient(160deg, #5a1f5e, #2a0f3a 60%, #1a0a26);
+  box-shadow: 0 0 0 2px #b56bd6, 0 0 0 6px #1a0a26, 0 0 0 8px var(--brass), 0 24px 50px rgba(0,0,0,.55); transition: box-shadow .4s; }
+.storm-wrap.fs { box-shadow: 0 0 0 2px #ffe08a, 0 0 0 6px #1a0a26, 0 0 0 8px #ff9a3c, 0 0 50px rgba(255,154,60,.55), 0 24px 50px rgba(0,0,0,.55); }
+.storm-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
+.fs-label { font-weight: 700; color: #ffd1ff; font-size: 14px; }
+.mult-badge { font-family: "Russo One", var(--display); font-size: 24px; line-height: 1; padding: 6px 14px; border-radius: 999px; background: linear-gradient(180deg, #ffe08a, #d4af6a); color: #2a1a05; box-shadow: 0 0 20px rgba(255,224,138,.4); }
+.mult-badge.bump { animation: bump .45s; }
+@keyframes bump { 50% { transform: scale(1.4) rotate(-5deg); } }
+.storm { --gap: 5px; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: var(--gap); overflow: hidden; border-radius: 14px; padding: 6px; background: rgba(255,255,255,.06); }
+.sc { aspect-ratio: 1; display: grid; place-items: center; font-size: clamp(22px, 6.4vw, 44px); line-height: 1; border-radius: 12px; user-select: none;
+  background: radial-gradient(circle at 50% 40%, rgba(255,255,255,.15), rgba(255,255,255,.03)); }
+.sc.fall { animation: fall 430ms cubic-bezier(.35,0,.45,1.3) both; animation-delay: var(--delay, 0ms); }
+@keyframes fall { from { transform: translateY(calc(var(--d) * -1 * (100% + var(--gap)))); } }
+.sc.win { background: radial-gradient(circle, rgba(255,224,138,.75), rgba(255,224,138,.12)); animation: wob .3s ease-in-out infinite alternate; }
+@keyframes wob { to { transform: scale(1.14) rotate(7deg); } }
+.sc.pop { animation: popout .3s ease-in forwards; }
+@keyframes popout { to { transform: scale(1.7); opacity: 0; } }
+.plum { position: relative; display: inline-block; width: .78em; height: .88em; border-radius: 48% 52% 50% 50% / 56% 56% 44% 44%;
+  background: radial-gradient(circle at 34% 30%, #e2b6ff 0 7%, #9442cf 28%, #521680 72%, #2c0848); box-shadow: inset -.05em -.07em .12em rgba(0,0,0,.45); }
+.plum::before { content: ""; position: absolute; left: 50%; top: -.14em; width: .06em; height: .2em; background: #5b3a1a; border-radius: 2px; transform: translateX(-50%) rotate(10deg); }
+.plum::after { content: ""; position: absolute; left: 54%; top: -.15em; width: .3em; height: .15em; background: #4caf50; border-radius: 0 100% 0 100%; transform: rotate(-18deg); }
+.shouts { position: absolute; inset: 0; pointer-events: none; overflow: hidden; border-radius: 24px; display: grid; place-items: center; }
+.shout { position: absolute; font-family: "Russo One", var(--display); font-size: clamp(30px, 8.5vw, 68px); color: #fff; white-space: nowrap;
+  -webkit-text-stroke: 2px #2a0f3a; text-shadow: 0 5px 0 #2a0f3a, 0 0 30px var(--c); animation: shout 1.15s cubic-bezier(.2,1.5,.4,1) forwards; }
+@keyframes shout { 0% { transform: translateY(var(--y)) scale(.3) rotate(var(--r)); opacity: 0; } 18% { transform: translateY(var(--y)) scale(1.1) rotate(var(--r)); opacity: 1; } 75% { opacity: 1; } 100% { transform: translateY(calc(var(--y) - 40px)) scale(1.25) rotate(var(--r)); opacity: 0; } }
+.buy { border-radius: 999px; padding: 10px 16px; border: 1px solid #b56bd6; background: rgba(181,107,214,.2); font-weight: 700; font-size: 14px; }
+.buy:hover:not(:disabled) { background: rgba(181,107,214,.35); }
+#stormPay { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); }
 .tab {
   display: flex; flex-direction: column; align-items: flex-start; gap: 2px; text-align: left;
   padding: 12px 14px; border-radius: 14px; border: 1px solid var(--line);
@@ -263,22 +314,28 @@ footer { text-align: center; font-size: 12px; color: var(--muted); padding-top: 
 
 /* ---------- responsive ---------- */
 @media (max-width: 980px) {
-  .layout { grid-template-columns: 1fr; }
-  .tabs { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+  .layout { grid-template-columns: minmax(0, 1fr); }
+  .tabs { grid-template-columns: repeat(3, minmax(0, 1fr)); row-gap: 14px; }
   .side { display: grid; grid-template-columns: 1fr 1fr; }
   .side .card:last-child { grid-column: 1 / -1; }
 }
 @media (max-width: 760px) {
+  .meters { grid-template-columns: 1fr; gap: 8px; }
+  .meter { padding: 8px 12px; gap: 5px; }
+  .meter small { display: none; }
+  .brand-sub { font-size: 10.5px; }
+  .ghost { padding: 6px 11px; font-size: 12px; }
   .top { grid-template-columns: 1fr auto; }
   .bank { grid-column: 1 / -1; grid-row: 2; }
-  .tabs { display: flex; overflow-x: auto; gap: 8px; padding-bottom: 4px; scrollbar-width: none; }
+  .tabs { display: flex; overflow-x: auto; gap: 8px; padding-block: 10px 4px; scrollbar-width: none; }
   .tab { flex: 0 0 auto; min-width: 118px; }
   .wheel-wrap { grid-template-columns: 1fr; }
   .side { display: flex; }
   .stage { min-height: 0; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .bulbs i, .cell.hit, .rb.won { animation: none; }
+  .bulbs i, .cell.hit, .rb.won, .sc.win, .ticker span, .heat.hot { animation: none; }
+  .sc.fall, .sc.pop { animation-duration: 1ms; }
   .coin { transition-duration: .3s; }
   .coin-toss.go { animation: none; }
 }
@@ -301,11 +358,31 @@ footer { text-align: center; font-size: 12px; color: var(--muted); padding-top: 
     </div>
     <div class="top-actions">
       <button class="ghost" id="soundBtn" type="button">Звук: вкл</button>
+      <button class="ghost" id="yellBtn" type="button">Крики: вкл</button>
       <button class="ghost" id="resetBtn" type="button">Начать заново</button>
     </div>
   </header>
 
+  <div class="meters">
+    <div class="meter">
+      <div class="m-top"><span>Уровень <span class="lvl-badge" id="lvl">1</span></span><b id="lvlPct">0%</b></div>
+      <div class="bar"><i id="lvlBar"></i></div>
+      <small id="lvlNext">Ставь, чтобы получить уровень 2 и награду 200 млн</small>
+    </div>
+    <div class="meter heat" id="heatMeter">
+      <div class="m-top"><span>Разгон удачи</span><b id="heatVal">+0%</b></div>
+      <div class="bar"><i id="heatBar"></i></div>
+      <small>Каждый проигрыш добавляет +5%, до +100%. Следующий выигрыш умножается на разгон.</small>
+    </div>
+    <div class="meter jp">
+      <div class="m-top"><span>Джекпот-дроп</span><b id="jpVal">100 млн</b></div>
+      <div class="bar"><i id="jpBar"></i></div>
+      <small>Шанс <span id="jpChance">0,05%</span> на любой крутке, растёт с каждой. 2% всех ставок идут в банк.</small>
+    </div>
+  </div>
+
   <nav class="tabs" role="tablist" aria-label="Игры">
+    <button class="tab" role="tab" data-game="storm" id="tab-storm"><b>Фруктовый шторм</b><span>6×5 · каскады · бонус</span><em class="badge">ХИТ</em></button>
     <button class="tab" role="tab" data-game="classic" id="tab-classic"><b>Фрукты</b><span>3 барабана · до 250×</span></button>
     <button class="tab" role="tab" data-game="mega" id="tab-mega"><b>Мега-слот</b><span>5×3 · 10 линий</span></button>
     <button class="tab" role="tab" data-game="roulette" id="tab-roulette"><b>Рулетка</b><span>европейская · до 36×</span></button>
@@ -315,6 +392,31 @@ footer { text-align: center; font-size: 12px; color: var(--muted); padding-top: 
 
   <main class="layout">
     <section class="stage">
+      <!-- storm -->
+      <div class="panel" data-panel="storm" hidden>
+        <div class="game-head">
+          <h2>Фруктовый шторм</h2>
+          <p>Восемь и больше одинаковых фруктов в любом месте сетки выигрывают и взрываются, сверху падают новые. Каждый каскад поднимает множитель на +1. Четыре 🍭 дают 15 фриспинов, и в них множитель не сбрасывается.</p>
+        </div>
+        <div class="ticker" aria-hidden="true"><span>ЯБЛОКИ! · ВИНОГРААААД! · БАНАНЫ! · СЛИИИИВЫ! · ЯБЛОКИ! · ВИНОГРААААД! · БАНАНЫ! · СЛИИИИВЫ! · АРБУЗЫ! · КЛУБНИКА!</span></div>
+        <div class="storm-wrap" id="stormWrap">
+          <div class="storm-top"><span class="fs-label" id="stormFs">Базовая игра</span><span class="mult-badge" id="stormMult">×1</span></div>
+          <div class="storm" id="storm"></div>
+          <div class="shouts" id="shouts"></div>
+        </div>
+        <div class="verdict" id="stormVerdict">Крути и слушай, как орут фрукты</div>
+        <div class="spin-row">
+          <button class="spin" id="stormSpin" type="button">Крутить<small id="stormBetLbl">10 млн</small></button>
+          <button class="auto" id="stormAuto" type="button" aria-pressed="false">Авто ×10</button>
+          <button class="buy" id="stormBuy" type="button">Купить бонус · <span id="stormBuyLbl">600 млн</span></button>
+          <button class="auto" id="stormYell" type="button">Крикнуть</button>
+        </div>
+        <div>
+          <p class="section-label">Выплаты за 8–9 · 10–11 · 12+ одинаковых, умножаются на ставку и множитель</p>
+          <div class="paytable" id="stormPay"></div>
+        </div>
+      </div>
+
       <!-- classic -->
       <div class="panel" data-panel="classic" hidden>
         <div class="game-head">
@@ -521,7 +623,8 @@ function short(n) {
 }
 
 /* ---------------- state ---------------- */
-let S = { balance: START, base: START, spins: 0, best: 0, wagered: 0, paid: 0, history: [], sound: true, tab: 'classic', bet: 10000000 };
+const JP_SEED = 100000000;
+let S = { balance: START, base: START, spins: 0, best: 0, wagered: 0, paid: 0, history: [], sound: true, yell: true, tab: 'storm', bet: 10000000, heat: 0, jp: JP_SEED, jpSpins: 0, xp: 0 };
 try {
   const raw = localStorage.getItem(KEY);
   if (raw) {
@@ -578,7 +681,7 @@ function renderBalance() {
   p.className = pr > 0 ? 'up' : pr < 0 ? 'down' : '';
 }
 
-const GAME_NAMES = { classic: 'Фрукты', mega: 'Мега-слот', roulette: 'Рулетка', fortune: 'Колесо', coin: 'Монетка' };
+const GAME_NAMES = { storm: 'Фруктовый шторм', jackpot: 'Джекпот-дроп', level: 'Новый уровень', classic: 'Фрукты', mega: 'Мега-слот', roulette: 'Рулетка', fortune: 'Колесо', coin: 'Монетка' };
 function renderStats() {
   $('#stSpins').textContent = fmt(S.spins);
   $('#stBest').textContent = short(S.best);
@@ -599,7 +702,21 @@ function renderStats() {
     h.appendChild(li);
   }
 }
-function renderAll() { renderBalance(); renderStats(); }
+const lvlNeed = (L) => 250000000 * L * (L + 1) / 2;
+const levelOf = (xp) => { let L = 1; while (xp >= lvlNeed(L)) L++; return L; };
+const jpChance = () => Math.min(0.03, 0.0005 + 0.0001 * S.jpSpins);
+const pct = (x, d = 0) => (x * 100).toFixed(d).replace('.', ',') + '%';
+function renderMeters() {
+  const L = levelOf(S.xp), lo = L > 1 ? lvlNeed(L - 1) : 0, hi = lvlNeed(L);
+  const k = Math.max(0, Math.min(1, (S.xp - lo) / (hi - lo)));
+  $('#lvl').textContent = L; $('#lvlPct').textContent = pct(k); $('#lvlBar').style.width = k * 100 + '%';
+  $('#lvlNext').textContent = 'Ещё ' + short(hi - S.xp) + ' ставок до уровня ' + (L + 1) + ' и награды ' + short((L + 1) * 100000000);
+  $('#heatVal').textContent = '+' + pct(S.heat); $('#heatBar').style.width = S.heat * 100 + '%';
+  $('#heatMeter').classList.toggle('hot', S.heat >= .5);
+  $('#jpVal').textContent = short(S.jp); $('#jpChance').textContent = pct(jpChance(), 2);
+  $('#jpBar').style.width = (jpChance() / 0.03) * 100 + '%';
+}
+function renderAll() { renderBalance(); renderStats(); renderMeters(); }
 
 function toast(msg, kind = '') {
   const t = document.createElement('div');
@@ -631,7 +748,8 @@ function setBet(v, rewrite = true) {
   S.bet = v;
   if (rewrite) betInput.value = fmt(v);
   $('#betShort').textContent = short(v);
-  for (const id of ['classicBetLbl', 'megaBetLbl', 'fortuneBetLbl', 'coinBetLbl']) $('#' + id).textContent = short(v);
+  for (const id of ['stormBetLbl', 'classicBetLbl', 'megaBetLbl', 'fortuneBetLbl', 'coinBetLbl']) $('#' + id).textContent = short(v);
+  $('#stormBuyLbl').textContent = short(v * 60);
   save();
 }
 betInput.addEventListener('input', () => setBet(Number(betInput.value.replace(/\D/g, '')), false));
@@ -650,6 +768,15 @@ function take(amount) {
   if (!(amount > 0)) { toast('Ставка должна быть больше нуля', 'bad'); return false; }
   if (amount > S.balance) { toast('Не хватает фишек: на балансе ' + short(S.balance), 'bad'); return false; }
   S.balance -= amount; S.spins++; S.wagered += amount;
+  S.jp += amount * 0.02; S.jpSpins++;
+  const before = levelOf(S.xp); S.xp += amount; const after = levelOf(S.xp);
+  if (after > before) {
+    let reward = 0;
+    for (let l = before + 1; l <= after; l++) reward += l * 100000000;
+    S.balance += reward; S.base += reward;
+    S.history.unshift({ g: 'level', b: 0, w: reward, n: 'уровень ' + after });
+    setTimeout(() => { toast('Уровень ' + after + '! Награда +' + short(reward), 'good'); sfx.win(); }, 200);
+  }
   save(); renderAll(); sfx.click();
   busyCount++;
   return true;
@@ -657,6 +784,23 @@ function take(amount) {
 function settle(game, stake, win, note) {
   busyCount = Math.max(0, busyCount - 1);
   win = Math.floor(win);
+  if (stake > 0 && win >= stake && S.heat > 0.001) {
+    const extra = Math.floor(win * S.heat);
+    note = (note ? note + ' · ' : '') + 'разгон +' + pct(S.heat);
+    win += extra; S.heat = 0;
+    setTimeout(() => toast('Разгон сработал: +' + short(extra), 'good'), 350);
+  } else if (win < stake) S.heat = Math.min(1, Math.round((S.heat + 0.05) * 100) / 100);
+  if (Math.random() < jpChance()) {
+    const amt = Math.floor(S.jp);
+    S.jp = JP_SEED; S.jpSpins = 0;
+    busyCount++;
+    setTimeout(() => {
+      busyCount = Math.max(0, busyCount - 1);
+      S.balance += amt; S.paid += amt; S.best = Math.max(S.best, amt);
+      S.history.unshift({ g: 'jackpot', b: 0, w: amt, n: 'прогрессивный банк' });
+      save(); renderAll(); bigWin(amt, 0, 'ДЖЕКПОТ-ДРОП!');
+    }, 1500);
+  }
   if (win > 0) { S.balance += win; S.paid += win; S.best = Math.max(S.best, win); }
   S.history.unshift({ g: game, b: stake, w: win, n: note });
   if (S.history.length > 40) S.history.length = 40;
@@ -676,11 +820,11 @@ function checkBroke() {
 
 /* ---------------- big win ---------------- */
 let confettiRaf = 0, bigTimer = 0;
-function bigWin(amount, x) {
+function bigWin(amount, x, title) {
   sfx.big();
   const el = $('#big');
-  $('#bigTitle').textContent = x >= 100 ? 'Джекпот!' : x >= 40 ? 'Мега-выигрыш' : 'Крупный выигрыш';
-  $('#bigX').textContent = 'в ' + (Math.round(x * 10) / 10).toString().replace('.', ',') + ' раз больше ставки';
+  $('#bigTitle').textContent = title || (x >= 100 ? 'Джекпот!' : x >= 40 ? 'Мега-выигрыш' : 'Крупный выигрыш');
+  $('#bigX').textContent = title ? 'прогрессивный джекпот' : 'в ' + (Math.round(x * 10) / 10).toString().replace('.', ',') + ' раз больше ставки';
   el.hidden = false;
   const amt = $('#bigAmount'), t0 = performance.now();
   const count = (t) => {
@@ -771,7 +915,7 @@ function Reels(el, cols, rows, pick) {
 let auto = null;
 function stopAuto() {
   auto = null;
-  document.querySelectorAll('.auto').forEach((b) => { b.setAttribute('aria-pressed', 'false'); b.textContent = 'Авто ×10'; });
+  document.querySelectorAll('.auto[aria-pressed]').forEach((b) => { b.setAttribute('aria-pressed', 'false'); b.textContent = 'Авто ×10'; });
 }
 function toggleAuto(game, btn) {
   if (auto && auto.game === game) { stopAuto(); return; }
@@ -790,6 +934,176 @@ function afterSpin(game) {
 }
 
 const games = {};
+
+/* ---------------- voice ---------------- */
+function speak(text) {
+  if (!S.yell || !('speechSynthesis' in window)) return;
+  try {
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = 'ru-RU'; u.rate = 1.05; u.pitch = 1.35; u.volume = 1;
+    const v = speechSynthesis.getVoices().find((x) => /^ru/i.test(x.lang));
+    if (v) u.voice = v;
+    speechSynthesis.speak(u);
+  } catch (e) { /* no speech */ }
+}
+const sleep = (ms) => new Promise((r) => setTimeout(r, reduceMotion() ? Math.min(ms, 120) : ms));
+
+/* ---------------- fruit storm ---------------- */
+(() => {
+  const SY = [
+    { k: 'L', s: '🍋', w: 17, p: [.35, .85, 2.5], n: 'ЛИМОНЫ!', v: 'Лимоны!', c: '#ffe34d' },
+    { k: 'O', s: '🍊', w: 16, p: [.4, 1, 3.4], n: 'АПЕЛЬСИНЫ!', v: 'Апельсины!', c: '#ff9a3c' },
+    { k: 'B', s: '🍌', w: 15, p: [.5, 1.25, 4.25], n: 'БАНАНЫ!', v: 'Бананы!', c: '#ffd84d' },
+    { k: 'G', s: '🍇', w: 14, p: [.7, 1.5, 5], n: 'ВИНОГРААААД!', v: 'Виноград!', c: '#b06bff' },
+    { k: 'A', s: '🍎', w: 13, p: [.85, 1.7, 7], n: 'ЯБЛОКИ!', v: 'Яблоки!', c: '#ff4d4d' },
+    { k: 'P', s: '<span class="plum"></span>', w: 11, p: [1.4, 2.5, 10], n: 'СЛИИИИВЫ!', v: 'Сливы!', c: '#9b4dff' },
+    { k: 'W', s: '🍉', w: 8, p: [1.7, 4.25, 17], n: 'АРБУЗЫ!', v: 'Арбузы!', c: '#4dff88' },
+    { k: 'S', s: '🍓', w: 5, p: [2.5, 8.5, 34], n: 'КЛУБНИКА!', v: 'Клубника!', c: '#ff4d8a' },
+    { k: '*', s: '🍭', w: 2.3, n: 'БОНУС!', v: 'Бонус!', c: '#ff7ad9' }
+  ];
+  const BY = Object.fromEntries(SY.map((x) => [x.k, x]));
+  const C = 6, R = 5, BUY = 60;
+  const el = $('#storm'), wrap = $('#stormWrap'), verdict = $('#stormVerdict'), multEl = $('#stormMult'), fsEl = $('#stormFs');
+  const btn = $('#stormSpin'), buyBtn = $('#stormBuy');
+  const rndSym = () => pickW(SY).k;
+  let grid = [...Array(C)].map(() => [...Array(R)].map(rndSym));
+  for (let i = 0; i < C * R; i++) { const d = document.createElement('div'); d.className = 'sc'; el.appendChild(d); }
+  const cellAt = (c, r) => el.children[r * C + c];
+  function paint(c, r, d = 0, delay = 0) {
+    const e = cellAt(c, r);
+    e.className = 'sc'; e.innerHTML = BY[grid[c][r]].s;
+    if (d > 0) { e.style.setProperty('--d', d); e.style.setProperty('--delay', delay + 'ms'); void e.offsetWidth; e.classList.add('fall'); }
+  }
+  for (let c = 0; c < C; c++) for (let r = 0; r < R; r++) paint(c, r);
+
+  const pay = $('#stormPay');
+  for (const x of SY.slice(0, 8).reverse()) pay.insertAdjacentHTML('beforeend', `<div class="pay"><span class="sym">${x.s}</span><span class="x">${x.p.map((v) => String(v).replace('.', ',')).join(' · ')}</span></div>`);
+  pay.insertAdjacentHTML('beforeend', '<div class="pay"><span>🍭 ×4 и больше</span><span class="x">15 FS</span></div><div class="pay"><span>🍭 ×3 в фриспинах</span><span class="x">+5 FS</span></div>');
+
+  let shoutRow = 0;
+  function shout(text, color, voice) {
+    const s = document.createElement('div');
+    s.className = 'shout'; s.textContent = text;
+    s.style.setProperty('--c', color);
+    s.style.setProperty('--r', (Math.random() * 14 - 7).toFixed(1) + 'deg');
+    s.style.setProperty('--y', ((shoutRow++ % 3) - 1) * 26 + '%');
+    $('#shouts').appendChild(s);
+    setTimeout(() => s.remove(), 1200);
+    if (voice) speak(voice);
+  }
+  function setMult(m, bump) {
+    multEl.textContent = '×' + m;
+    if (bump) { multEl.classList.remove('bump'); void multEl.offsetWidth; multEl.classList.add('bump'); }
+  }
+
+  async function round(bet, mult) {
+    grid = [...Array(C)].map(() => [...Array(R)].map(rndSym));
+    for (let c = 0; c < C; c++) for (let r = 0; r < R; r++) paint(c, r, R, c * 55 + (R - 1 - r) * 30);
+    setMult(mult);
+    setTimeout(sfx.stop, 300); setTimeout(sfx.stop, 550);
+    await sleep(750);
+    const stars = grid.flat().filter((k) => k === '*').length;
+    let win = 0, casc = 0;
+    for (;;) {
+      const cnt = {};
+      for (const col of grid) for (const k of col) cnt[k] = (cnt[k] || 0) + 1;
+      const winners = Object.keys(cnt).filter((k) => k !== '*' && cnt[k] >= 8);
+      if (!winners.length) break;
+      casc++;
+      let w = 0;
+      for (const k of winners) { const n = cnt[k]; w += BY[k].p[n >= 12 ? 2 : n >= 10 ? 1 : 0] * bet; }
+      w *= mult; win += w;
+      for (let c = 0; c < C; c++) for (let r = 0; r < R; r++) if (winners.includes(grid[c][r])) cellAt(c, r).classList.add('win');
+      winners.forEach((k, i) => setTimeout(() => shout(BY[k].n, BY[k].c, i === 0 ? winners.map((x) => BY[x].v).join(' ') : null), i * 380));
+      sfx.win();
+      verdict.className = 'verdict good';
+      verdict.textContent = 'Каскад ' + casc + ': ' + winners.map((k) => BY[k].n.replace('!', '').toLowerCase()).join(', ') + ' ×' + mult + ' → +' + short(w);
+      await sleep(900 + (winners.length - 1) * 300);
+      for (let c = 0; c < C; c++) for (let r = 0; r < R; r++) if (winners.includes(grid[c][r])) cellAt(c, r).classList.add('pop');
+      await sleep(300);
+      for (let c = 0; c < C; c++) {
+        const old = grid[c];
+        const keptIdx = [];
+        old.forEach((k, r) => { if (!winners.includes(k)) keptIdx.push(r); });
+        const gone = R - keptIdx.length;
+        grid[c] = [...Array.from({ length: gone }, rndSym), ...keptIdx.map((r) => old[r])];
+        for (let r = 0; r < R; r++) {
+          const d = r < gone ? gone : r - keptIdx[r - gone];
+          paint(c, r, d, c * 25);
+        }
+      }
+      mult++; setMult(mult, true);
+      await sleep(520);
+    }
+    if (stars >= 3) {
+      for (let c = 0; c < C; c++) for (let r = 0; r < R; r++) if (grid[c][r] === '*') cellAt(c, r).classList.add('win');
+    }
+    return { win, stars, mult };
+  }
+
+  async function freeSpins(bet, n) {
+    wrap.classList.add('fs');
+    shout('ФРИСПИНЫ!', '#ffe08a', 'Фриспины! Яблоки! Виноград! Бананы! Сливы!');
+    sfx.big();
+    await sleep(1500);
+    let mult = 1, total = 0;
+    for (let i = 0; i < n; i++) {
+      fsEl.textContent = 'Фриспин ' + (i + 1) + ' из ' + n + ' · всего +' + short(total);
+      const r = await round(bet, mult);
+      total += r.win; mult = r.mult;
+      if (r.stars >= 3 && n < 45) { n += 5; shout('+5 ФРИСПИНОВ', '#ff7ad9', 'Плюс пять!'); await sleep(900); }
+      await sleep(250);
+    }
+    wrap.classList.remove('fs');
+    fsEl.textContent = 'Базовая игра';
+    verdict.className = 'verdict good';
+    verdict.textContent = 'Бонус закончен: ' + short(total) + ', множитель дошёл до ×' + mult;
+    return total;
+  }
+
+  let busy = false;
+  async function play(buy) {
+    if (busy) return;
+    const bet = S.bet, cost = buy ? bet * BUY : bet;
+    if (!take(cost)) { stopAuto(); return; }
+    busy = true; btn.disabled = true; buyBtn.disabled = true;
+    verdict.className = 'verdict'; verdict.textContent = buy ? 'Бонус куплен!' : 'Фрукты летят…';
+    let total = 0, note = '';
+    if (buy) {
+      total = await freeSpins(bet, 15); note = 'купленный бонус';
+    } else {
+      const r = await round(bet, 1);
+      total = r.win;
+      note = r.win ? 'множитель до ×' + r.mult : '';
+      if (!r.win) { verdict.className = 'verdict bad'; verdict.textContent = 'Пусто. Разгон растёт, крути дальше'; }
+      else verdict.textContent = 'Итого за спин: +' + short(r.win);
+      if (r.stars >= 4) {
+        shout('БОНУС!', '#ff7ad9', 'Бонус!');
+        await sleep(1300);
+        total += await freeSpins(bet, 15); note = 'бонус с 🍭';
+      }
+    }
+    busy = false; btn.disabled = false; buyBtn.disabled = false;
+    setMult(1);
+    settle('storm', cost, total, note);
+    afterSpin('storm');
+  }
+  btn.addEventListener('click', () => play(false));
+  buyBtn.addEventListener('click', () => {
+    if (busy) return;
+    stopAuto();
+    modal('Купить бонус?', 'Сразу 15 фриспинов с растущим множителем за ' + fmt(S.bet * BUY) + ' (60 ставок).', [
+      { label: 'Купить', primary: true, fn: () => play(true) }, { label: 'Отмена' }
+    ]);
+  });
+  $('#stormAuto').addEventListener('click', (e) => toggleAuto('storm', e.currentTarget));
+  $('#stormYell').addEventListener('click', () => {
+    ['A', 'G', 'B', 'P'].forEach((k, i) => setTimeout(() => shout(BY[k].n, BY[k].c), i * 450));
+    speak('Яблоки! Виноград! Бананы! Сливы!');
+  });
+  games.storm = { spin: () => play(false) };
+})();
 
 /* ---------------- classic slot ---------------- */
 (() => {
@@ -1157,7 +1471,7 @@ const games = {};
 
 /* ---------------- tabs, controls ---------------- */
 function showTab(g) {
-  if (!games[g]) g = 'classic';
+  if (!games[g]) g = 'storm';
   S.tab = g; save();
   document.querySelectorAll('.tab').forEach((t) => t.setAttribute('aria-selected', String(t.dataset.game === g)));
   document.querySelectorAll('[data-panel]').forEach((p) => { p.hidden = p.dataset.panel !== g; });
@@ -1167,11 +1481,14 @@ document.querySelectorAll('.tab').forEach((t) => t.addEventListener('click', () 
 const soundBtn = $('#soundBtn');
 const renderSound = () => { soundBtn.textContent = 'Звук: ' + (S.sound ? 'вкл' : 'выкл'); };
 soundBtn.addEventListener('click', () => { S.sound = !S.sound; save(); renderSound(); sfx.click(); });
+const yellBtn = $('#yellBtn');
+const renderYell = () => { yellBtn.textContent = 'Крики: ' + (S.yell ? 'вкл' : 'выкл'); };
+yellBtn.addEventListener('click', () => { S.yell = !S.yell; save(); renderYell(); if (S.yell) speak('Яблоки!'); else if ('speechSynthesis' in window) speechSynthesis.cancel(); });
 
 $('#resetBtn').addEventListener('click', () => modal('Начать заново?', 'Баланс вернётся к 2 000 000 000, статистика и история очистятся.', [
   { label: 'Сбросить', primary: true, fn: () => {
     stopAuto();
-    Object.assign(S, { balance: START, base: START, spins: 0, best: 0, wagered: 0, paid: 0, history: [] });
+    Object.assign(S, { balance: START, base: START, spins: 0, best: 0, wagered: 0, paid: 0, history: [], heat: 0, jp: JP_SEED, jpSpins: 0, xp: 0 });
     setBet(10000000); save(); renderAll(); toast('Снова 2 млрд на счету', 'good');
   } },
   { label: 'Отмена' }
@@ -1188,6 +1505,8 @@ document.addEventListener('keydown', (e) => {
 
 setBet(S.bet);
 renderSound();
+renderYell();
+if (!S.stormSeen) { S.stormSeen = true; S.tab = 'storm'; }
 showTab(S.tab);
 shown = S.balance; balEl.textContent = fmt(S.balance);
 renderAll();
