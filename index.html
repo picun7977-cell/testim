@@ -81,7 +81,7 @@ button:disabled { cursor: not-allowed; opacity: .5; }
 .ghost:hover { border-color: var(--brass); color: var(--brass-hi); }
 
 /* ---------- tabs ---------- */
-.tabs { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; }
+.tabs { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 10px; }
 .tab { position: relative; }
 .tab .badge { position: absolute; top: -8px; right: 10px; font-family: "Russo One", var(--body); font-size: 10px; letter-spacing: .08em; padding: 2px 8px; border-radius: 999px; background: #ff4d8a; color: #fff; box-shadow: 0 0 12px rgba(255,77,138,.6); }
 
@@ -333,10 +333,114 @@ footer { text-align: center; font-size: 12px; color: var(--muted); padding-top: 
 .vbtns label:focus-within { outline: 2px solid var(--brass-hi); outline-offset: 2px; }
 .vbtns input { position: absolute; width: 1px; height: 1px; opacity: 0; }
 
+/* ---------- cases ---------- */
+.subtabs { display: flex; gap: 4px; flex-wrap: wrap; padding: 4px; border-radius: 18px; background: rgba(0,0,0,.3); align-self: flex-start; max-width: 100%; }
+.subtabs button { border: 0; background: transparent; border-radius: 999px; padding: 8px 16px; font-weight: 700; font-size: 14px; color: var(--muted); }
+.subtabs button[aria-selected="true"] { background: var(--brass); color: #2a1a05; }
+.subtabs span { font-family: var(--mono); font-size: 12px; margin-left: 4px; opacity: .8; }
+.case-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+.case-grid.small { grid-template-columns: repeat(auto-fill, minmax(104px, 1fr)); gap: 8px; }
+.case-card { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 14px 10px; border-radius: 16px; border: 1px solid var(--line); background: rgba(0,0,0,.25); transition: transform .15s, border-color .15s; }
+.case-card:hover { transform: translateY(-3px); border-color: var(--cc); }
+.case-card b { font-size: 14px; line-height: 1.2; }
+.case-card .cp { font-family: var(--mono); color: var(--brass-hi); font-size: 13px; }
+.case-grid.small .case-card { padding: 10px 6px; gap: 5px; }
+.case-grid.small .case-card b { font-size: 12px; }
+.cbox { position: relative; width: 88px; aspect-ratio: 1; border-radius: 18px; display: grid; place-items: center; font-size: 44px; flex: none;
+  background: linear-gradient(160deg, var(--cc), color-mix(in srgb, var(--cc) 40%, #000));
+  box-shadow: 0 10px 24px rgba(0,0,0,.45), 0 0 26px color-mix(in srgb, var(--cc) 35%, transparent), inset 0 2px 0 rgba(255,255,255,.35); }
+.cbox::before { content: ""; position: absolute; left: 0; right: 0; top: 28%; height: 13%; background: rgba(0,0,0,.28); }
+.cbox span { position: relative; filter: drop-shadow(0 3px 4px rgba(0,0,0,.5)); }
+.case-grid.small .cbox { width: 56px; font-size: 28px; border-radius: 12px; }
+.mini-box { width: 30px; font-size: 16px; border-radius: 8px; box-shadow: none; }
+.it { --rc: #b0c3d9; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; padding: 8px 6px; border-radius: 12px; text-align: center; min-width: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,.35), color-mix(in srgb, var(--rc) 28%, rgba(0,0,0,.3))); border-bottom: 3px solid var(--rc); }
+.it .ico { font-size: 38px; line-height: 1.1; filter: drop-shadow(0 0 10px color-mix(in srgb, var(--rc) 75%, transparent)); }
+.it .nm { font-size: 11.5px; line-height: 1.2; color: var(--ivory); overflow-wrap: anywhere; }
+.it .pr { font-family: var(--mono); font-size: 12px; color: var(--brass-hi); }
+.it .ch { position: absolute; top: 5px; right: 7px; font-family: var(--mono); font-size: 10.5px; color: var(--muted); }
+.it.won { box-shadow: 0 0 0 2px var(--rc), 0 0 30px var(--rc); z-index: 1; animation: hit .6s ease-in-out 4 alternate; }
+.it.sel { box-shadow: 0 0 0 2px var(--brass-hi), 0 0 18px rgba(243,217,154,.4); }
+.it .acts { display: flex; gap: 4px; margin-top: 4px; flex-wrap: wrap; justify-content: center; }
+.it .acts button { border: 1px solid var(--line); background: rgba(0,0,0,.35); border-radius: 999px; padding: 3px 8px; font-size: 11px; font-weight: 700; }
+.it .acts button:hover { border-color: var(--brass); color: var(--brass-hi); }
+.item-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 8px; }
+.item-grid.small { grid-template-columns: repeat(auto-fill, minmax(92px, 1fr)); }
+.item-grid.small .it .ico { font-size: 28px; }
+.pickable .it { cursor: pointer; }
+.pickable .it:hover { filter: brightness(1.2); }
+.reel-host { position: relative; display: flex; flex-direction: column; gap: 8px; }
+.reel-host::after { content: ""; position: absolute; left: 50%; top: -6px; bottom: -6px; width: 3px; margin-left: -1.5px; background: var(--brass-hi); box-shadow: 0 0 12px var(--brass-hi); border-radius: 2px; z-index: 2; pointer-events: none; }
+.hreel { --cw: 124px; position: relative; height: 150px; overflow: hidden; border-radius: 14px; background: rgba(0,0,0,.35); box-shadow: inset 0 0 0 1px var(--line);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent); mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent); }
+.reel-host.dense .hreel { --cw: 100px; height: 118px; }
+.reel-host.dense .hreel .it .ico { font-size: 30px; }
+.hstrip { position: absolute; left: 0; top: 8px; bottom: 8px; display: flex; gap: 6px; will-change: transform; }
+.hstrip .it { width: var(--cw); flex: none; }
+.cv-head { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.cv-title { display: flex; align-items: center; gap: 12px; }
+.cv-title h3 { margin: 0; font-family: var(--display); font-weight: 400; font-size: 24px; color: var(--brass-hi); }
+.cv-title .cbox { width: 56px; font-size: 28px; border-radius: 12px; }
+.cv-controls { display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap; }
+.seg { display: inline-flex; padding: 3px; border-radius: 999px; background: rgba(0,0,0,.3); gap: 2px; flex-wrap: wrap; }
+.seg button { border: 0; background: transparent; border-radius: 999px; padding: 7px 13px; font-weight: 700; font-size: 13px; color: var(--muted); }
+.seg button[aria-pressed="true"] { background: var(--brass); color: #2a1a05; }
+.fast { display: inline-flex; align-items: center; gap: 6px; font-size: 14px; color: var(--muted); cursor: pointer; }
+.fast input { accent-color: var(--brass); width: 16px; height: 16px; }
+.cv-result { display: flex; flex-direction: column; gap: 10px; align-items: center; }
+.cv-result .item-grid { width: 100%; }
+.upg { display: grid; grid-template-columns: minmax(0, 1fr) minmax(180px, 240px) minmax(0, 1fr); gap: 16px; align-items: center; }
+.upg-col { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.upg-slot { min-height: 150px; border-radius: 14px; border: 1px dashed var(--line); display: flex; flex-wrap: wrap; gap: 6px; align-items: center; justify-content: center; padding: 8px; color: var(--muted); font-size: 13px; text-align: center; }
+.upg-slot .it { width: 92px; }
+.upg-slot .it .ico { font-size: 30px; }
+.dial { position: relative; width: 100%; max-width: 240px; aspect-ratio: 1; justify-self: center; }
+.dial svg { width: 100%; height: 100%; display: block; }
+.dial-center { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; }
+.dial-center b { font-family: var(--mono); font-size: 30px; color: var(--brass-hi); }
+.dial-center span { font-size: 13px; color: var(--muted); }
+#upgPtr { transform-box: view-box; transform-origin: 100px 100px; }
+.mults { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
+.mults button { padding: 6px 10px; border-radius: 10px; border: 1px solid var(--line); background: rgba(3,16,11,.4); font-size: 13px; font-weight: 700; }
+.mults button:hover { border-color: var(--brass); color: var(--brass-hi); }
+.upg-chips { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--muted); }
+.upg-chips input { flex: 1; min-width: 0; background: rgba(0,0,0,.3); border: 1px solid var(--line); border-radius: 10px; color: var(--brass-hi); font-family: var(--mono); padding: 7px 10px; font-size: 14px; }
+.upg-lists { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; }
+.upg-lists .item-grid { max-height: 360px; overflow-y: auto; padding: 4px; }
+.bt-opts { display: flex; gap: 10px; flex-wrap: wrap; }
+.bt-rounds { display: flex; flex-wrap: wrap; gap: 6px; min-height: 48px; align-items: center; padding: 8px; border-radius: 12px; background: rgba(0,0,0,.25); font-size: 13px; color: var(--muted); }
+.bt-rounds button { display: flex; align-items: center; gap: 6px; border: 1px solid var(--line); background: rgba(0,0,0,.3); border-radius: 999px; padding: 3px 10px 3px 3px; font-size: 12.5px; }
+.bt-rounds button:hover { border-color: var(--bad); }
+.bt-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; font-weight: 700; }
+.bt-roundcases { display: flex; gap: 4px; flex-wrap: wrap; }
+.bt-roundcases .cur { outline: 2px solid var(--brass-hi); outline-offset: 2px; }
+.bt-roundcases .done { opacity: .35; }
+.bt-cols { display: grid; grid-template-columns: repeat(var(--n, 2), minmax(0, 1fr)); gap: 10px; }
+.bt-col { border-radius: 16px; border: 1px solid var(--line); background: rgba(0,0,0,.25); padding: 10px; display: flex; flex-direction: column; gap: 8px; min-width: 0; transition: opacity .4s, box-shadow .4s; }
+.bt-col.win { border-color: var(--brass-hi); box-shadow: 0 0 30px rgba(243,217,154,.35); }
+.bt-col.lose { opacity: .5; }
+.bt-who { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 14px; min-width: 0; }
+.bt-who .av { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; background: rgba(255,255,255,.08); font-size: 22px; flex: none; }
+.bt-who .tot { margin-left: auto; font-family: var(--mono); color: var(--brass-hi); white-space: nowrap; }
+.vwrap { position: relative; }
+.vwrap::after { content: ""; position: absolute; left: -4px; right: -4px; top: 50%; height: 3px; margin-top: -1.5px; background: var(--brass-hi); box-shadow: 0 0 10px var(--brass-hi); z-index: 2; pointer-events: none; }
+.vreel { position: relative; height: 240px; overflow: hidden; border-radius: 12px; background: rgba(0,0,0,.35);
+  -webkit-mask-image: linear-gradient(180deg, transparent, #000 18%, #000 82%, transparent); mask-image: linear-gradient(180deg, transparent, #000 18%, #000 82%, transparent); }
+.vstrip { position: absolute; left: 6px; right: 6px; top: 0; display: flex; flex-direction: column; gap: 6px; will-change: transform; }
+.vstrip .it { height: 100px; flex: none; }
+.bt-items { display: grid; grid-template-columns: repeat(auto-fill, minmax(60px, 1fr)); gap: 4px; }
+.bt-items .it { padding: 4px 2px; }
+.bt-items .it .ico { font-size: 22px; }
+.bt-items .it .nm { display: none; }
+.bt-items .it .pr { font-size: 10px; }
+.inv-bar { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
+.inv-bar .sum { font-size: 14px; color: var(--muted); }
+.inv-bar .sum b { color: var(--brass-hi); font-family: var(--mono); }
+
 /* ---------- responsive ---------- */
 @media (max-width: 980px) {
   .layout { grid-template-columns: minmax(0, 1fr); }
-  .tabs { grid-template-columns: repeat(3, minmax(0, 1fr)); row-gap: 14px; }
+  .tabs { grid-template-columns: repeat(4, minmax(0, 1fr)); row-gap: 14px; }
   .side { display: grid; grid-template-columns: 1fr 1fr; }
   .side .card:last-child { grid-column: 1 / -1; }
 }
@@ -351,6 +455,13 @@ footer { text-align: center; font-size: 12px; color: var(--muted); padding-top: 
   .tabs { display: flex; overflow-x: auto; gap: 8px; padding-block: 10px 4px; scrollbar-width: none; }
   .tab { flex: 0 0 auto; min-width: 118px; }
   .wheel-wrap { grid-template-columns: 1fr; }
+  .upg, .upg-lists { grid-template-columns: minmax(0, 1fr); }
+  .hreel { --cw: 96px; height: 124px; }
+  .hreel .it .ico { font-size: 30px; }
+  .vreel { height: 200px; }
+  .vstrip .it { height: 84px; }
+  .vstrip .it .ico { font-size: 28px; }
+  .bt-who .nm2 { display: none; }
   .side { display: flex; }
   .stage { min-height: 0; }
 }
@@ -406,6 +517,7 @@ footer { text-align: center; font-size: 12px; color: var(--muted); padding-top: 
 
   <nav class="tabs" role="tablist" aria-label="Игры">
     <button class="tab" role="tab" data-game="storm" id="tab-storm"><b>Фруктовый шторм</b><span>6×5 · каскады · бонус</span><em class="badge">ХИТ</em></button>
+    <button class="tab" role="tab" data-game="cases" id="tab-cases"><b>Кейсы</b><span>апгрейд · батлы</span><em class="badge">НОВОЕ</em></button>
     <button class="tab" role="tab" data-game="classic" id="tab-classic"><b>Фрукты</b><span>3 барабана · до 250×</span></button>
     <button class="tab" role="tab" data-game="mega" id="tab-mega"><b>Мега-слот</b><span>5×3 · 10 линий</span></button>
     <button class="tab" role="tab" data-game="roulette" id="tab-roulette"><b>Рулетка</b><span>европейская · до 36×</span></button>
@@ -437,6 +549,100 @@ footer { text-align: center; font-size: 12px; color: var(--muted); padding-top: 
         <div>
           <p class="section-label">Выплаты за 8–9 · 10–11 · 12+ одинаковых, умножаются на ставку и множитель</p>
           <div class="paytable" id="stormPay"></div>
+        </div>
+      </div>
+
+      <!-- cases -->
+      <div class="panel" data-panel="cases" hidden>
+        <div class="game-head">
+          <h2>Кейсы</h2>
+          <p>Открывай кейсы, апгрейди предметы и сражайся с ботами в батлах. Всё падает в инвентарь, продать можно в любой момент по цене предмета.</p>
+        </div>
+        <div class="subtabs" role="tablist" aria-label="Разделы кейсов">
+          <button type="button" role="tab" data-sub="shop">Кейсы</button>
+          <button type="button" role="tab" data-sub="upgrade">Апгрейд</button>
+          <button type="button" role="tab" data-sub="battle">Батлы</button>
+          <button type="button" role="tab" data-sub="inv">Инвентарь<span id="invCount">0</span></button>
+        </div>
+
+        <div class="panel" data-sub-panel="shop">
+          <div class="case-grid" id="caseGrid"></div>
+          <div class="panel" id="caseView" hidden>
+            <div class="cv-head">
+              <button class="ghost" type="button" id="caseBack">← Все кейсы</button>
+              <div class="cv-title"><div class="cbox" id="cvIcon"></div><div><h3 id="cvName"></h3><span class="note" id="cvSub"></span></div></div>
+            </div>
+            <div class="reel-host" id="cvReels"></div>
+            <div class="cv-controls">
+              <div class="seg" id="cvCount" role="group" aria-label="Сколько кейсов открыть">
+                <button type="button" data-n="1" aria-pressed="true">×1</button><button type="button" data-n="2" aria-pressed="false">×2</button><button type="button" data-n="3" aria-pressed="false">×3</button><button type="button" data-n="4" aria-pressed="false">×4</button><button type="button" data-n="5" aria-pressed="false">×5</button>
+              </div>
+              <label class="fast" for="cvFast"><input type="checkbox" id="cvFast"> Быстро</label>
+              <button class="spin" type="button" id="cvOpen">Открыть<small id="cvCost"></small></button>
+            </div>
+            <div class="cv-result" id="cvResult"></div>
+            <div>
+              <p class="section-label">Что внутри и с каким шансом</p>
+              <div class="item-grid small" id="cvItems"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel" data-sub-panel="upgrade" hidden>
+          <div class="upg">
+            <div class="upg-col">
+              <p class="section-label">Ставишь</p>
+              <div class="upg-slot" id="upgIn">Выбери предметы из инвентаря ниже</div>
+              <label class="upg-chips" for="upgChips">+ фишки <input id="upgChips" inputmode="numeric" autocomplete="off" value="0"></label>
+            </div>
+            <div class="dial">
+              <svg viewBox="0 0 200 200" aria-hidden="true">
+                <circle cx="100" cy="100" r="80" fill="none" stroke="rgba(0,0,0,.45)" stroke-width="18"/>
+                <circle id="upgArc" cx="100" cy="100" r="80" fill="none" stroke="#5fd39a" stroke-width="18" pathLength="100" stroke-dasharray="0 100" transform="rotate(-90 100 100)" style="transition: stroke-dasharray .4s"/>
+                <circle cx="100" cy="100" r="62" fill="none" stroke="rgba(212,175,106,.3)" stroke-width="1"/>
+                <g id="upgPtr"><polygon points="100,6 91,28 109,28" fill="#f3d99a" stroke="#2a1a05" stroke-width="2"/></g>
+              </svg>
+              <div class="dial-center"><b id="upgPct">0%</b><span id="upgX">шанс</span></div>
+            </div>
+            <div class="upg-col">
+              <p class="section-label">Получаешь</p>
+              <div class="upg-slot" id="upgOut">Выбери цель справа внизу</div>
+              <div class="mults" id="upgMults"><button type="button" data-m="1.5">×1,5</button><button type="button" data-m="2">×2</button><button type="button" data-m="3">×3</button><button type="button" data-m="5">×5</button><button type="button" data-m="10">×10</button><button type="button" data-m="20">×20</button></div>
+            </div>
+          </div>
+          <div class="verdict" id="upgVerdict">Шанс = стоимость ставки ÷ цена цели, минус 8%. Максимум 80%.</div>
+          <div class="spin-row"><button class="spin" type="button" id="upgGo">Апгрейд</button></div>
+          <div class="upg-lists">
+            <div><p class="section-label">Твой инвентарь</p><div class="item-grid small pickable" id="upgInv"></div></div>
+            <div><p class="section-label">Цели дороже ставки</p><div class="item-grid small pickable" id="upgTargets"></div></div>
+          </div>
+        </div>
+
+        <div class="panel" data-sub-panel="battle" hidden>
+          <div class="panel" id="btBuilder">
+            <div class="bt-opts">
+              <div class="seg" id="btPlayers" role="group" aria-label="Игроки"><button type="button" data-v="2" aria-pressed="true">1 на 1</button><button type="button" data-v="3" aria-pressed="false">1 на 1 на 1</button></div>
+              <div class="seg" id="btMode" role="group" aria-label="Режим"><button type="button" data-v="normal" aria-pressed="true">Больше всех</button><button type="button" data-v="crazy" aria-pressed="false">Кто меньше</button></div>
+            </div>
+            <p class="section-label">Нажимай на кейсы, чтобы добавить раунды (до 10)</p>
+            <div class="case-grid small" id="btCases"></div>
+            <div class="bt-rounds" id="btRounds"></div>
+            <div class="board-bar"><div class="sum">Вход: <b id="btCost">0</b> · победитель забирает все предметы</div><button class="spin" type="button" id="btStart">Создать батл</button></div>
+          </div>
+          <div class="panel" id="btArena" hidden>
+            <div class="bt-top"><span id="btRoundLbl"></span><div class="bt-roundcases" id="btRoundCases"></div></div>
+            <div class="bt-cols" id="btCols"></div>
+            <div class="verdict" id="btVerdict"></div>
+            <div class="spin-row"><button class="spin" type="button" id="btAgain" hidden>Ещё раз<small id="btAgainCost"></small></button><button class="ghost" type="button" id="btNew" hidden>Новый батл</button></div>
+          </div>
+        </div>
+
+        <div class="panel" data-sub-panel="inv" hidden>
+          <div class="inv-bar">
+            <div class="sum">Предметов: <b id="invN">0</b> на сумму <b id="invSum">0</b></div>
+            <div class="spin-row"><div class="seg" id="invSort" role="group" aria-label="Сортировка"><button type="button" data-v="price" aria-pressed="true">Дороже</button><button type="button" data-v="new" aria-pressed="false">Новые</button></div><button class="ghost" type="button" id="invSellAll">Продать всё</button></div>
+          </div>
+          <div class="item-grid" id="invGrid"></div>
         </div>
       </div>
 
@@ -1370,6 +1576,474 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, reduceMotion() ? Math.min
   games.storm = { spin: () => play(false) };
 })();
 
+/* ---------------- cases, upgrader, battles ---------------- */
+(() => {
+  const M = 1e6;
+  const RAR = {
+    g: ['Ширпотреб', '#b0c3d9', 1000], b: ['Армейское', '#4b69ff', 300], p: ['Запрещённое', '#8847ff', 80],
+    k: ['Засекреченное', '#d32ce6', 20], r: ['Тайное', '#eb4b4b', 5], x: ['Золотое', '#e4ae39', 1]
+  };
+  const ITEMS = {};
+  [
+    ['g1', '🔩', 'Болт удачи', .8], ['g2', '🧦', 'Носок стримера', 1.2], ['g3', '🥫', 'Консерва «Додеп»', 1.5],
+    ['g4', '🪥', 'Щётка VIP', 2], ['g5', '🧃', 'Сок «Занос»', 2.5], ['g6', '🪀', 'Йо-йо', 3],
+    ['b1', '🔫', 'Водяной пистолет', 6], ['b2', '🕶️', 'Очки хайроллера', 8], ['b3', '🎒', 'Рюкзак лута', 10],
+    ['b4', '🧢', 'Кепка «Крутка»', 12], ['b5', '🪖', 'Каска', 15], ['b6', '🎸', 'Гитара', 18],
+    ['p1', '🗡️', 'Кинжал «Сумрак»', 35], ['p2', '🏹', 'Лук «Фиалка»', 45], ['p3', '📱', 'Смартфон «Иксы»', 55],
+    ['p4', '🎮', 'Геймпад «Додеп»', 70], ['p5', '🛹', 'Скейт «Слива»', 85],
+    ['k1', '⌚', 'Часы «Хронос»', 180], ['k2', '🪓', 'Топор «Викинг»', 240], ['k3', '🏍️', 'Мотоцикл «Зверь»', 320], ['k4', '🛡️', 'Щит «Изумруд»', 400],
+    ['r1', '🔪', 'Нож «Изумрудный клык»', 900], ['r2', '🏎️', 'Болид «Занос»', 1300], ['r3', '🚁', 'Вертолёт хайроллера', 1800], ['r4', '🐉', 'Дракон «Икс»', 2500],
+    ['x1', '🧤', 'Перчатки «Золотой куш»', 6000], ['x2', '👑', 'Корона казино', 9000], ['x3', '💎', 'Бриллиант «Слива»', 15000],
+    ['x4', '🛸', 'НЛО «Максвин»', 25000], ['x5', '🦄', 'Единорог «Легенда»', 50000]
+  ].forEach(([id, ico, name, p]) => { ITEMS[id] = { id, ico, name, price: p * M, r: id[0] }; });
+  const CASES = [
+    { id: 'free', name: 'Бесплатный', ico: '🎁', cc: '#2f9e6a', free: true, items: ['g1', 'g2', 'g3', 'g4', 'g5', 'g6', 'b1', 'b2', 'p1'] },
+    { id: 'fruit', name: 'Фруктовый', ico: '🍇', cc: '#8847ff', items: ['g2', 'g3', 'g4', 'g5', 'g6', 'b1', 'b2', 'b3', 'b4', 'p1', 'p2', 'k1'] },
+    { id: 'streamer', name: 'Стримерский', ico: '🎙️', cc: '#d32ce6', items: ['g5', 'g6', 'b2', 'b3', 'b4', 'b5', 'b6', 'p2', 'p3', 'p4', 'k1', 'k2', 'r1'] },
+    { id: 'roller', name: 'Хайроллер', ico: '🎩', cc: '#4b69ff', items: ['b4', 'b5', 'b6', 'p3', 'p4', 'p5', 'k1', 'k2', 'k3', 'k4', 'r1', 'r2', 'x1'] },
+    { id: 'risk', name: 'Всё или ничего', ico: '🎲', cc: '#ff7a1a', weights: { x3: 1, g1: 99 } },
+    { id: 'knife', name: 'Ножевой', ico: '🔪', cc: '#eb4b4b', items: ['p4', 'p5', 'k2', 'k3', 'k4', 'r1', 'r2', 'r3', 'r4', 'x1', 'x2'] },
+    { id: 'gold', name: 'Золотой', ico: '👑', cc: '#e4ae39', items: ['k3', 'k4', 'r2', 'r3', 'r4', 'x1', 'x2', 'x3', 'x4'] },
+    { id: 'legend', name: 'Легендарный', ico: '🦄', cc: '#b01e8f', items: ['r3', 'r4', 'x1', 'x2', 'x3', 'x4', 'x5'] }
+  ];
+  const nice = (v) => { const e = Math.pow(10, Math.floor(Math.log10(v)) - 1); return Math.round(v / e) * e; };
+  for (const c of CASES) {
+    const w = c.weights || Object.fromEntries(c.items.map((i) => [i, RAR[i[0]][2]]));
+    c.pool = Object.entries(w).map(([id, wt]) => ({ id, w: wt }));
+    const tw = c.pool.reduce((a, x) => a + x.w, 0);
+    c.pool.forEach((x) => { x.ch = x.w / tw; });
+    c.pool.sort((a, b) => ITEMS[b.id].price - ITEMS[a.id].price);
+    c.ev = c.pool.reduce((a, x) => a + x.ch * ITEMS[x.id].price, 0);
+    c.price = c.free ? 0 : nice(c.ev / 0.9);
+    c.fill = c.pool.map((x) => ({ id: x.id, w: Math.pow(x.w, .55) }));
+  }
+  const CASE = Object.fromEntries(CASES.map((c) => [c.id, c]));
+  const draw = (c) => pickW(c.pool).id;
+  const drawFill = (c) => pickW(c.fill).id;
+  const FREE_CD = 5 * 60 * 1000;
+  Object.assign(GAME_NAMES, { cases: 'Кейс', upgrade: 'Апгрейд', battle: 'Батл', sell: 'Продажа' });
+
+  if (!Array.isArray(S.inv)) S.inv = [];
+  S.inv = S.inv.filter((x) => x && ITEMS[x.i]);
+  if (!S.uid) S.uid = 1;
+  const addItem = (id) => { const u = S.uid++; S.inv.push({ u, i: id }); return u; };
+  const invValue = () => S.inv.reduce((a, x) => a + ITEMS[x.i].price, 0);
+
+  function card(id, extra) {
+    const it = ITEMS[id], d = document.createElement('div');
+    d.className = 'it' + (extra ? ' ' + extra : '');
+    d.style.setProperty('--rc', RAR[it.r][1]);
+    d.innerHTML = '<span class="ico"></span><span class="nm"></span><span class="pr"></span>';
+    d.querySelector('.ico').textContent = it.ico;
+    d.querySelector('.nm').textContent = it.name;
+    d.querySelector('.pr').textContent = short(it.price);
+    d.title = it.name + ' · ' + RAR[it.r][0] + ' · ' + fmt(it.price);
+    return d;
+  }
+  function caseBox(c, cls) {
+    const b = document.createElement('div');
+    b.className = 'cbox' + (cls ? ' ' + cls : ''); b.style.setProperty('--cc', c.cc);
+    b.innerHTML = '<span></span>'; b.firstChild.textContent = c.ico;
+    return b;
+  }
+  const freeLeft = () => Math.max(0, (S.freeAt || 0) + FREE_CD - Date.now());
+  const mmss = (ms) => { const t = Math.ceil(ms / 1000); return Math.floor(t / 60) + ':' + String(t % 60).padStart(2, '0'); };
+  const priceLabel = (c) => (c.free ? (freeLeft() ? 'через ' + mmss(freeLeft()) : 'бесплатно') : short(c.price));
+
+  function finish(game, stake, value, note) {
+    busyCount = Math.max(0, busyCount - 1);
+    S.history.unshift({ g: game, b: stake, w: value, n: note });
+    if (S.history.length > 40) S.history.length = 40;
+    save(); renderAll(); refreshInv();
+    const x = stake > 0 ? value / stake : (value > 0 ? 3 : 0);
+    if (stake > 0 && value >= stake * 10) { bigWin(value, x); voice('big', 'Занос! Занос!'); celebrate(x); }
+    else if (value > stake) { sfx.win(); celebrate(x); if (x >= 2) voice('win', 'Есть!'); }
+    else if (value > 0) sfx.win();
+    else sfx.lose();
+    setTimeout(checkBroke, 400);
+  }
+  function sell(uids) {
+    let v = 0;
+    S.inv = S.inv.filter((x) => { if (uids.includes(x.u)) { v += ITEMS[x.i].price; return false; } return true; });
+    uids.forEach((u) => upgSel.delete(u));
+    if (v) { S.balance += v; S.paid += v; save(); renderAll(); sfx.chip(); toast('Продано за ' + short(v), 'good'); }
+    refreshInv();
+  }
+
+  /* ----- reels ----- */
+  const spinMs = (fast) => (reduceMotion() ? 250 : fast ? 1500 : 5200 + Math.random() * 700);
+  function tickLoop(el, anim, readPos, step, center, on) {
+    let last = null;
+    const loop = () => {
+      const m = new DOMMatrixReadOnly(getComputedStyle(el).transform);
+      const idx = Math.floor((center - readPos(m)) / step);
+      if (idx !== last) { last = idx; if (on) sfx.tick(); }
+      if (anim.playState === 'running') requestAnimationFrame(loop);
+    };
+    requestAnimationFrame(loop);
+  }
+  function hreel(host, c, winId, fast, ticks) {
+    return new Promise((res) => {
+      const reel = document.createElement('div'); reel.className = 'hreel';
+      const strip = document.createElement('div'); strip.className = 'hstrip';
+      reel.appendChild(strip); host.appendChild(reel);
+      const N = 62, W = 54;
+      for (let i = 0; i < N; i++) strip.appendChild(card(i === W ? winId : drawFill(c)));
+      const cw = strip.children[0].offsetWidth, step = cw + 6, half = reel.clientWidth / 2;
+      const target = -(W * step + cw / 2) + half + (Math.random() - .5) * cw * .75;
+      const anim = strip.animate([{ transform: 'translateX(0px)' }, { transform: 'translateX(' + target + 'px)' }],
+        { duration: spinMs(fast), easing: 'cubic-bezier(.06,.72,.1,1)', fill: 'forwards' });
+      tickLoop(strip, anim, (m) => m.m41, step, half, ticks);
+      anim.onfinish = () => { strip.children[W].classList.add('won'); res(); };
+    });
+  }
+  function hpreview(host, c, n) {
+    host.innerHTML = ''; host.classList.toggle('dense', n > 2);
+    for (let k = 0; k < n; k++) {
+      const reel = document.createElement('div'); reel.className = 'hreel';
+      const strip = document.createElement('div'); strip.className = 'hstrip';
+      for (let i = 0; i < 14; i++) strip.appendChild(card(drawFill(c)));
+      reel.appendChild(strip); host.appendChild(reel);
+      const cw = strip.children[0].offsetWidth;
+      strip.style.transform = 'translateX(' + (-(6 * (cw + 6) + cw / 2) + reel.clientWidth / 2) + 'px)';
+    }
+  }
+  function vreel(host, c, winId, fast, ticks) {
+    return new Promise((res) => {
+      host.innerHTML = '';
+      const reel = document.createElement('div'); reel.className = 'vreel';
+      const strip = document.createElement('div'); strip.className = 'vstrip';
+      reel.appendChild(strip); host.appendChild(reel);
+      const N = 40, W = 34;
+      for (let i = 0; i < N; i++) strip.appendChild(card(i === W ? winId : drawFill(c)));
+      const ch = strip.children[0].offsetHeight, step = ch + 6, half = reel.clientHeight / 2;
+      const target = -(W * step + ch / 2) + half + (Math.random() - .5) * ch * .6;
+      const anim = strip.animate([{ transform: 'translateY(0px)' }, { transform: 'translateY(' + target + 'px)' }],
+        { duration: spinMs(fast), easing: 'cubic-bezier(.06,.72,.1,1)', fill: 'forwards' });
+      tickLoop(strip, anim, (m) => m.m42, step, half, ticks);
+      anim.onfinish = () => { strip.children[W].classList.add('won'); res(); };
+    });
+  }
+  function vpreview(host, c) {
+    host.innerHTML = '';
+    const reel = document.createElement('div'); reel.className = 'vreel';
+    const strip = document.createElement('div'); strip.className = 'vstrip';
+    for (let i = 0; i < 5; i++) strip.appendChild(card(drawFill(c)));
+    reel.appendChild(strip); host.appendChild(reel);
+    const ch = strip.children[0].offsetHeight;
+    strip.style.transform = 'translateY(' + (-(2 * (ch + 6) + ch / 2) + reel.clientHeight / 2) + 'px)';
+  }
+  function rarityFx(ids) {
+    const best = ids.reduce((a, id) => Math.max(a, 'gbpkrx'.indexOf(ITEMS[id].r)), 0);
+    if (best >= 5) { sfx.airhorn(); celebrate(60); voice('big', 'Золото! Золото! Занос!'); }
+    else if (best >= 4) { celebrate(6); }
+    else if (best >= 3) { FX.captions(2); FX.rain(12, ['💎', '🔥', '🤑']); }
+  }
+
+  /* ----- sub navigation ----- */
+  let sub = S.casesSub || 'shop';
+  function showSub(v) {
+    sub = v; S.casesSub = v; save();
+    document.querySelectorAll('[data-sub]').forEach((b) => b.setAttribute('aria-selected', String(b.dataset.sub === v)));
+    document.querySelectorAll('[data-sub-panel]').forEach((p) => { p.hidden = p.dataset.subPanel !== v; });
+    if (v === 'upgrade') renderUpg();
+    if (v === 'inv') renderInv();
+    if (v === 'shop' && current && !$('#caseView').hidden) hpreview($('#cvReels'), current, count);
+  }
+  document.querySelectorAll('[data-sub]').forEach((b) => b.addEventListener('click', () => { sfx.chip(); showSub(b.dataset.sub); }));
+  function refreshInv() {
+    $('#invCount').textContent = S.inv.length;
+    if (sub === 'inv') renderInv();
+    if (sub === 'upgrade') renderUpg();
+  }
+
+  /* ----- shop ----- */
+  let current = null, count = 1, opening = false;
+  const grid = $('#caseGrid');
+  function renderShop() {
+    grid.innerHTML = '';
+    for (const c of CASES) {
+      const b = document.createElement('button'); b.type = 'button'; b.className = 'case-card'; b.style.setProperty('--cc', c.cc);
+      b.appendChild(caseBox(c));
+      b.insertAdjacentHTML('beforeend', '<b></b><span class="cp"></span>');
+      b.querySelector('b').textContent = c.name; b.querySelector('.cp').textContent = priceLabel(c);
+      b.dataset.case = c.id;
+      b.addEventListener('click', () => { sfx.chip(); openView(c); });
+      grid.appendChild(b);
+    }
+  }
+  function openView(c) {
+    current = c; if (c.free) count = 1;
+    grid.hidden = true; $('#caseView').hidden = false;
+    const ic = $('#cvIcon'); ic.style.setProperty('--cc', c.cc); ic.innerHTML = '<span></span>'; ic.firstChild.textContent = c.ico;
+    $('#cvName').textContent = c.name;
+    $('#cvSub').textContent = c.free ? 'Раз в 5 минут, бесплатно' : 'Средняя ценность ' + short(c.ev) + ' при цене ' + short(c.price);
+    $('#cvResult').innerHTML = '';
+    document.querySelectorAll('#cvCount button').forEach((b) => { b.setAttribute('aria-pressed', String(+b.dataset.n === count)); b.disabled = c.free && b.dataset.n !== '1'; });
+    const items = $('#cvItems'); items.innerHTML = '';
+    for (const x of c.pool) {
+      const d = card(x.id); d.insertAdjacentHTML('afterbegin', '<span class="ch"></span>');
+      d.querySelector('.ch').textContent = (x.ch * 100 < .1 ? (x.ch * 100).toFixed(3) : (x.ch * 100).toFixed(2)).replace('.', ',') + '%';
+      items.appendChild(d);
+    }
+    updCost(); hpreview($('#cvReels'), c, count);
+  }
+  function updCost() { if (current) $('#cvCost').textContent = current.free ? priceLabel(current) : short(current.price * count); }
+  $('#caseBack').addEventListener('click', () => { if (opening) return; $('#caseView').hidden = true; grid.hidden = false; current = null; renderShop(); });
+  document.querySelectorAll('#cvCount button').forEach((b) => b.addEventListener('click', () => {
+    if (opening) return;
+    count = +b.dataset.n;
+    document.querySelectorAll('#cvCount button').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+    updCost(); hpreview($('#cvReels'), current, count);
+  }));
+  async function openCase() {
+    if (!current || opening) return;
+    const c = current, n = c.free ? 1 : count, cost = c.price * n;
+    if (c.free) { if (freeLeft()) { toast('Бесплатный кейс будет через ' + mmss(freeLeft()), 'bad'); return; } S.freeAt = Date.now(); save(); busyCount++; }
+    else if (!take(cost)) return;
+    opening = true; $('#cvOpen').disabled = true;
+    const host = $('#cvReels'); host.innerHTML = ''; host.classList.toggle('dense', n > 2);
+    $('#cvResult').innerHTML = '';
+    const wins = Array.from({ length: n }, () => draw(c));
+    await Promise.all(wins.map((id, i) => hreel(host, c, id, $('#cvFast').checked, i === 0)));
+    const uids = wins.map(addItem);
+    const value = wins.reduce((a, id) => a + ITEMS[id].price, 0);
+    const res = $('#cvResult');
+    const g = document.createElement('div'); g.className = 'item-grid';
+    wins.forEach((id, i) => {
+      const d = card(id); d.insertAdjacentHTML('beforeend', '<div class="acts"><button type="button">Продать</button></div>');
+      d.querySelector('button').addEventListener('click', () => { if (!S.inv.some((x) => x.u === uids[i])) return; sell([uids[i]]); d.remove(); });
+      g.appendChild(d);
+    });
+    const row = document.createElement('div'); row.className = 'spin-row';
+    row.innerHTML = '<button class="ghost" type="button">Продать всё за ' + short(value) + '</button><button class="ghost" type="button">Оставить в инвентаре</button>';
+    row.children[0].addEventListener('click', () => { sell(uids.filter((u) => S.inv.some((x) => x.u === u))); res.innerHTML = ''; });
+    row.children[1].addEventListener('click', () => { res.innerHTML = ''; });
+    res.appendChild(g); res.appendChild(row);
+    rarityFx(wins);
+    opening = false; $('#cvOpen').disabled = false;
+    finish('cases', cost, value, c.name + ': ' + wins.map((id) => ITEMS[id].name).join(', '));
+    updCost();
+  }
+  $('#cvOpen').addEventListener('click', openCase);
+  setInterval(() => {
+    if (current && current.free) updCost();
+    const fc = grid.querySelector('[data-case="free"] .cp'); if (fc && !grid.hidden) fc.textContent = priceLabel(CASE.free);
+  }, 1000);
+
+  /* ----- inventory ----- */
+  let invSort = 'price';
+  function sortedInv() {
+    const a = S.inv.slice();
+    return invSort === 'price' ? a.sort((x, y) => ITEMS[y.i].price - ITEMS[x.i].price) : a.reverse();
+  }
+  function renderInv() {
+    $('#invN').textContent = S.inv.length; $('#invSum').textContent = short(invValue());
+    const g = $('#invGrid'); g.innerHTML = '';
+    if (!S.inv.length) { g.innerHTML = '<p class="empty">Инвентарь пуст. Открой кейс или выиграй батл.</p>'; return; }
+    for (const x of sortedInv().slice(0, 300)) {
+      const d = card(x.i); d.insertAdjacentHTML('beforeend', '<div class="acts"><button type="button" data-a="sell">Продать</button><button type="button" data-a="up">В апгрейд</button></div>');
+      d.querySelector('[data-a=sell]').addEventListener('click', () => sell([x.u]));
+      d.querySelector('[data-a=up]').addEventListener('click', () => { upgSel.clear(); upgSel.add(x.u); showSub('upgrade'); });
+      g.appendChild(d);
+    }
+  }
+  document.querySelectorAll('#invSort button').forEach((b) => b.addEventListener('click', () => {
+    invSort = b.dataset.v; document.querySelectorAll('#invSort button').forEach((x) => x.setAttribute('aria-pressed', String(x === b))); renderInv();
+  }));
+  $('#invSellAll').addEventListener('click', () => {
+    if (!S.inv.length) return;
+    modal('Продать всё?', 'Все ' + S.inv.length + ' предметов уйдут за ' + fmt(invValue()) + ' фишек.', [
+      { label: 'Продать', primary: true, fn: () => sell(S.inv.map((x) => x.u)) }, { label: 'Отмена' }
+    ]);
+  });
+
+  /* ----- upgrader ----- */
+  const upgSel = new Set();
+  let upgTarget = null, upgBusy = false, ptrRot = 0;
+  const upgChips = $('#upgChips');
+  const chipsVal = () => Number(upgChips.value.replace(/\D/g, '')) || 0;
+  const inVal = () => S.inv.filter((x) => upgSel.has(x.u)).reduce((a, x) => a + ITEMS[x.i].price, 0) + chipsVal();
+  const chanceOf = () => (upgTarget && inVal() > 0 ? Math.min(.8, inVal() / ITEMS[upgTarget].price * .92) : 0);
+  upgChips.addEventListener('input', () => { renderUpg(); });
+  upgChips.addEventListener('change', () => { upgChips.value = fmt(chipsVal()); });
+  function renderUpg() {
+    for (const u of [...upgSel]) if (!S.inv.some((x) => x.u === u)) upgSel.delete(u);
+    const v = inVal();
+    if (upgTarget && ITEMS[upgTarget].price <= v) upgTarget = null;
+    const inBox = $('#upgIn'); inBox.innerHTML = '';
+    const selItems = S.inv.filter((x) => upgSel.has(x.u));
+    if (!selItems.length && !chipsVal()) inBox.textContent = 'Выбери предметы из инвентаря ниже или добавь фишки';
+    selItems.forEach((x) => inBox.appendChild(card(x.i)));
+    if (chipsVal()) inBox.insertAdjacentHTML('beforeend', '<div class="it" style="--rc:#d4af6a"><span class="ico">🪙</span><span class="nm">фишки</span><span class="pr">' + short(chipsVal()) + '</span></div>');
+    const out = $('#upgOut'); out.innerHTML = '';
+    if (upgTarget) out.appendChild(card(upgTarget)); else out.textContent = v ? 'Выбери цель в списке справа внизу' : 'Сначала выбери, что ставишь';
+    const ch = chanceOf();
+    $('#upgPct').textContent = (ch * 100).toFixed(2).replace('.', ',') + '%';
+    $('#upgX').textContent = upgTarget && v ? '×' + (ITEMS[upgTarget].price / v).toFixed(2).replace('.', ',') : 'шанс';
+    $('#upgArc').setAttribute('stroke-dasharray', (ch * 100).toFixed(2) + ' 100');
+    const inv = $('#upgInv'); inv.innerHTML = '';
+    if (!S.inv.length) inv.innerHTML = '<p class="empty">Инвентарь пуст</p>';
+    for (const x of sortedInv().slice(0, 200)) {
+      const d = card(x.i, upgSel.has(x.u) ? 'sel' : '');
+      d.addEventListener('click', () => { if (upgBusy) return; if (upgSel.has(x.u)) upgSel.delete(x.u); else if (upgSel.size < 8) upgSel.add(x.u); else toast('Не больше 8 предметов', 'bad'); sfx.chip(); renderUpg(); });
+      inv.appendChild(d);
+    }
+    const tg = $('#upgTargets'); tg.innerHTML = '';
+    const list = Object.values(ITEMS).filter((it) => it.price > v).sort((a, b) => a.price - b.price);
+    for (const it of list) {
+      const d = card(it.id, it.id === upgTarget ? 'sel' : '');
+      const pc = v ? Math.min(.8, v / it.price * .92) : 0;
+      if (v) { d.insertAdjacentHTML('afterbegin', '<span class="ch"></span>'); d.querySelector('.ch').textContent = (pc * 100).toFixed(1).replace('.', ',') + '%'; }
+      d.addEventListener('click', () => { if (upgBusy) return; upgTarget = it.id; sfx.chip(); renderUpg(); });
+      tg.appendChild(d);
+    }
+  }
+  document.querySelectorAll('#upgMults button').forEach((b) => b.addEventListener('click', () => {
+    const v = inVal(); if (!v || upgBusy) { if (!v) toast('Сначала выбери, что ставишь', 'bad'); return; }
+    const want = v * Number(b.dataset.m);
+    const it = Object.values(ITEMS).filter((x) => x.price > v).sort((a, c) => Math.abs(a.price - want) - Math.abs(c.price - want))[0];
+    if (it) { upgTarget = it.id; renderUpg(); }
+  }));
+  async function doUpgrade() {
+    if (upgBusy) return;
+    const v = inVal(), chips = chipsVal();
+    if (!v) { toast('Выбери предметы или добавь фишки', 'bad'); return; }
+    if (!upgTarget) { toast('Выбери цель апгрейда', 'bad'); return; }
+    if (chips > S.balance) { toast('Не хватает фишек на балансе', 'bad'); return; }
+    const ch = chanceOf(), target = upgTarget;
+    if (chips > 0) { if (!take(chips)) return; } else busyCount++;
+    const used = [...upgSel];
+    S.inv = S.inv.filter((x) => !upgSel.has(x.u));
+    upgSel.clear(); save();
+    upgBusy = true; $('#upgGo').disabled = true;
+    const r = Math.random(), ok = r < ch;
+    const angle = r * 360;
+    const from = ptrRot, to = ptrRot - (ptrRot % 360) + 360 * 5 + angle;
+    ptrRot = to;
+    $('#upgVerdict').className = 'verdict'; $('#upgVerdict').textContent = 'Крутим… шанс ' + (ch * 100).toFixed(2).replace('.', ',') + '%';
+    const ptr = $('#upgPtr');
+    const anim = ptr.animate([{ transform: 'rotate(' + from + 'deg)' }, { transform: 'rotate(' + to + 'deg)' }],
+      { duration: reduceMotion() ? 300 : 4600, easing: 'cubic-bezier(.1,.7,.15,1)', fill: 'forwards' });
+    if (!reduceMotion()) for (let i = 1; i < 30; i++) setTimeout(sfx.tick, 4600 * (1 - Math.pow(1 - i / 30, 1 / 3)));
+    await anim.finished;
+    if (ok) addItem(target);
+    const vd = $('#upgVerdict');
+    vd.className = 'verdict ' + (ok ? 'good' : 'bad');
+    vd.textContent = ok ? 'Апгрейд удался: ' + ITEMS[target].name + ' (' + short(ITEMS[target].price) + ')' : 'Не повезло, ' + short(v) + ' сгорело';
+    upgBusy = false; $('#upgGo').disabled = false;
+    upgChips.value = '0';
+    if (!ok) upgTarget = null;
+    if (ok) rarityFx([target]);
+    finish('upgrade', v, ok ? ITEMS[target].price : 0, (ok ? 'успех → ' : 'мимо → ') + ITEMS[target].name + ', шанс ' + (ch * 100).toFixed(1).replace('.', ',') + '%');
+    renderUpg();
+  }
+  $('#upgGo').addEventListener('click', doUpgrade);
+
+  /* ----- battles ----- */
+  const BOTS = [['🤖', 'Бот Жора'], ['👽', 'Бот Валера'], ['🐒', 'Бот Кеша'], ['🦍', 'Бот Толик'], ['🧟', 'Бот Слива'], ['🤡', 'Бот Додеп'], ['🐸', 'Бот Пепе'], ['🦊', 'Бот Лис']];
+  let btRounds = [], btPlayers = 2, btMode = 'normal', btBusy = false;
+  const segBind = (sel, cb) => document.querySelectorAll(sel + ' button').forEach((b) => b.addEventListener('click', () => {
+    if (btBusy) return;
+    document.querySelectorAll(sel + ' button').forEach((x) => x.setAttribute('aria-pressed', String(x === b))); cb(b.dataset.v); sfx.chip(); renderBuilder();
+  }));
+  segBind('#btPlayers', (v) => { btPlayers = +v; });
+  segBind('#btMode', (v) => { btMode = v; });
+  const btCost = () => btRounds.reduce((a, id) => a + CASE[id].price, 0);
+  function renderBuilder() {
+    const g = $('#btCases');
+    if (!g.childElementCount) {
+      for (const c of CASES.filter((x) => !x.free)) {
+        const b = document.createElement('button'); b.type = 'button'; b.className = 'case-card'; b.style.setProperty('--cc', c.cc);
+        b.appendChild(caseBox(c)); b.insertAdjacentHTML('beforeend', '<b></b><span class="cp"></span>');
+        b.querySelector('b').textContent = c.name; b.querySelector('.cp').textContent = short(c.price);
+        b.addEventListener('click', () => { if (btRounds.length >= 10) { toast('Максимум 10 раундов', 'bad'); return; } btRounds.push(c.id); sfx.chip(); renderBuilder(); });
+        g.appendChild(b);
+      }
+    }
+    const r = $('#btRounds'); r.innerHTML = '';
+    if (!btRounds.length) r.textContent = 'Раунды появятся здесь. Нажми на раунд, чтобы убрать его.';
+    btRounds.forEach((id, i) => {
+      const b = document.createElement('button'); b.type = 'button';
+      b.appendChild(caseBox(CASE[id], 'mini-box'));
+      b.insertAdjacentHTML('beforeend', '<span></span>'); b.lastChild.textContent = (i + 1) + '. ' + CASE[id].name;
+      b.addEventListener('click', () => { btRounds.splice(i, 1); renderBuilder(); });
+      r.appendChild(b);
+    });
+    $('#btCost').textContent = btRounds.length ? fmt(btCost()) + ' (' + short(btCost()) + ')' : '0';
+  }
+  let lastBattle = null;
+  async function startBattle(cfg) {
+    if (btBusy) return;
+    cfg = cfg || { rounds: btRounds.slice(), players: btPlayers, mode: btMode };
+    if (!cfg.rounds.length) { toast('Добавь хотя бы один кейс', 'bad'); return; }
+    const cost = cfg.rounds.reduce((a, id) => a + CASE[id].price, 0);
+    if (!take(cost)) return;
+    lastBattle = cfg; btBusy = true;
+    $('#btBuilder').hidden = true; $('#btArena').hidden = false;
+    $('#btAgain').hidden = true; $('#btNew').hidden = true;
+    const vd = $('#btVerdict'); vd.className = 'verdict'; vd.textContent = cfg.mode === 'crazy' ? 'Режим «Кто меньше»: побеждает самый маленький итог' : 'Побеждает самый большой итог';
+    const bots = BOTS.slice().sort(() => Math.random() - .5).slice(0, cfg.players - 1);
+    const players = [{ av: '😎', name: 'Ты', me: true }, ...bots.map(([av, name]) => ({ av, name }))];
+    players.forEach((p) => { p.items = []; p.total = 0; });
+    const cols = $('#btCols'); cols.innerHTML = ''; cols.style.setProperty('--n', players.length);
+    players.forEach((p) => {
+      const col = document.createElement('div'); col.className = 'bt-col';
+      col.innerHTML = '<div class="bt-who"><span class="av"></span><span class="nm2"></span><span class="tot">0</span></div><div class="vwrap"></div><div class="bt-items"></div>';
+      col.querySelector('.av').textContent = p.av; col.querySelector('.nm2').textContent = p.name;
+      p.col = col; p.tot = col.querySelector('.tot'); p.reel = col.querySelector('.vwrap'); p.list = col.querySelector('.bt-items');
+      cols.appendChild(col);
+      vpreview(p.reel, CASE[cfg.rounds[0]]);
+    });
+    const rc = $('#btRoundCases'); rc.innerHTML = '';
+    cfg.rounds.forEach((id) => rc.appendChild(caseBox(CASE[id], 'mini-box')));
+    await sleep(600);
+    for (let r = 0; r < cfg.rounds.length; r++) {
+      const c = CASE[cfg.rounds[r]];
+      $('#btRoundLbl').textContent = 'Раунд ' + (r + 1) + ' из ' + cfg.rounds.length + ' · ' + c.name;
+      [...rc.children].forEach((b, i) => { b.classList.toggle('cur', i === r); b.classList.toggle('done', i < r); });
+      const wins = players.map(() => draw(c));
+      await Promise.all(players.map((p, i) => vreel(p.reel, c, wins[i], $('#cvFast').checked, i === 0)));
+      players.forEach((p, i) => {
+        p.items.push(wins[i]); p.total += ITEMS[wins[i]].price; p.tot.textContent = short(p.total);
+        p.list.appendChild(card(wins[i]));
+      });
+      rarityFx(wins.slice(0, 1));
+      await sleep(reduceMotion() ? 100 : 650);
+    }
+    [...rc.children].forEach((b) => { b.classList.remove('cur'); b.classList.add('done'); });
+    const cmp = cfg.mode === 'crazy' ? Math.min : Math.max;
+    const best = cmp(...players.map((p) => p.total));
+    const tied = players.filter((p) => p.total === best);
+    const winner = tied[Math.floor(Math.random() * tied.length)];
+    players.forEach((p) => p.col.classList.add(p === winner ? 'win' : 'lose'));
+    winner.tot.textContent = '👑 ' + short(winner.total);
+    const pot = players.reduce((a, p) => a + p.total, 0);
+    const potItems = players.flatMap((p) => p.items);
+    vd.className = 'verdict ' + (winner.me ? 'good' : 'bad');
+    vd.textContent = (tied.length > 1 ? 'Ничья, решила монетка. ' : '') + (winner.me ? 'Ты победил и забираешь ' + potItems.length + ' предметов на ' + short(pot) + '!' : winner.name + ' забирает всё (' + short(pot) + ')');
+    if (winner.me) potItems.forEach(addItem);
+    btBusy = false;
+    $('#btAgain').hidden = false; $('#btNew').hidden = false; $('#btAgainCost').textContent = short(cost);
+    finish('battle', cost, winner.me ? pot : 0, (cfg.players === 2 ? '1 на 1' : '1 на 1 на 1') + (cfg.mode === 'crazy' ? ', кто меньше' : '') + ', ' + (winner.me ? 'победа' : 'победил ' + winner.name));
+  }
+  $('#btStart').addEventListener('click', () => startBattle());
+  $('#btAgain').addEventListener('click', () => startBattle(lastBattle));
+  $('#btNew').addEventListener('click', () => { if (btBusy) return; $('#btArena').hidden = true; $('#btBuilder').hidden = false; renderBuilder(); });
+
+  games.cases = {
+    spin() {
+      if (sub === 'shop' && current) openCase();
+      else if (sub === 'upgrade') doUpgrade();
+      else if (sub === 'battle' && !$('#btBuilder').hidden) startBattle();
+      else if (sub === 'battle' && lastBattle && !btBusy) startBattle(lastBattle);
+    },
+    onShow() { showSub(sub); }
+  };
+  renderShop(); renderBuilder(); refreshInv(); showSub(sub);
+  if (!btRounds.length) { btRounds = ['fruit', 'streamer', 'roller']; renderBuilder(); }
+})();
+
 /* ---------------- classic slot ---------------- */
 (() => {
   const SY = [
@@ -1740,6 +2414,7 @@ function showTab(g) {
   S.tab = g; save();
   document.querySelectorAll('.tab').forEach((t) => t.setAttribute('aria-selected', String(t.dataset.game === g)));
   document.querySelectorAll('[data-panel]').forEach((p) => { p.hidden = p.dataset.panel !== g; });
+  if (games[g].onShow) games[g].onShow();
 }
 document.querySelectorAll('.tab').forEach((t) => t.addEventListener('click', () => { stopAuto(); showTab(t.dataset.game); sfx.chip(); }));
 
@@ -1753,7 +2428,8 @@ yellBtn.addEventListener('click', () => { S.yell = !S.yell; save(); renderYell()
 $('#resetBtn').addEventListener('click', () => modal('Начать заново?', 'Баланс вернётся к 2 000 000 000, статистика и история очистятся.', [
   { label: 'Сбросить', primary: true, fn: () => {
     stopAuto();
-    Object.assign(S, { balance: START, base: START, spins: 0, best: 0, wagered: 0, paid: 0, history: [], heat: 0, jp: JP_SEED, jpSpins: 0, xp: 0 });
+    Object.assign(S, { balance: START, base: START, spins: 0, best: 0, wagered: 0, paid: 0, history: [], heat: 0, jp: JP_SEED, jpSpins: 0, xp: 0, inv: [], freeAt: 0 });
+    document.querySelector('#invCount').textContent = '0';
     setBet(10000000); save(); renderAll(); toast('Снова 2 млрд на счету', 'good');
   } },
   { label: 'Отмена' }
