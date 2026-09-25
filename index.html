@@ -312,6 +312,27 @@ footer { text-align: center; font-size: 12px; color: var(--muted); padding-top: 
 .big-x { margin-top: 6px; color: var(--muted); letter-spacing: .12em; text-transform: uppercase; font-size: 13px; }
 @keyframes pop { from { transform: scale(.4); opacity: 0; } }
 
+/* ---------- win effects ---------- */
+.fx-layer { position: fixed; inset: 0; pointer-events: none; z-index: 60; overflow: hidden; }
+.fx { position: absolute; left: 0; top: 0; line-height: 1; will-change: transform, opacity; user-select: none; }
+.fx.cap { font-family: "Russo One", var(--display); color: #fff; white-space: nowrap; -webkit-text-stroke: 2px #1a0a26; text-shadow: 0 4px 0 #1a0a26, 0 0 26px var(--c); }
+.fx-flash { position: fixed; inset: 0; pointer-events: none; z-index: 59; opacity: 0; background: radial-gradient(circle, rgba(255,224,138,.55), rgba(255,77,138,.25) 60%, transparent 85%); }
+
+/* ---------- voice pack ---------- */
+.voice-box { width: min(560px, 100%); max-height: 88vh; overflow-y: auto; text-align: left; }
+.voice-box h4 { text-align: center; }
+.voice-box > p { text-align: center; }
+.vrows { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+.vrow { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 6px 10px; padding: 8px 10px; border-radius: 12px; background: rgba(0,0,0,.25); }
+.vrow b { font-size: 14px; }
+.vrow .st { display: block; font-size: 12px; color: var(--muted); }
+.vrow .st.own { color: var(--good); }
+.vbtns { display: flex; gap: 6px; }
+.vbtns button, .vbtns label { border: 1px solid var(--line); background: rgba(3,16,11,.5); border-radius: 999px; padding: 6px 11px; font-size: 12.5px; font-weight: 600; cursor: pointer; }
+.vbtns label:hover, .vbtns button:hover { border-color: var(--brass); color: var(--brass-hi); }
+.vbtns label:focus-within { outline: 2px solid var(--brass-hi); outline-offset: 2px; }
+.vbtns input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+
 /* ---------- responsive ---------- */
 @media (max-width: 980px) {
   .layout { grid-template-columns: minmax(0, 1fr); }
@@ -359,6 +380,8 @@ footer { text-align: center; font-size: 12px; color: var(--muted); padding-top: 
     <div class="top-actions">
       <button class="ghost" id="soundBtn" type="button">Звук: вкл</button>
       <button class="ghost" id="yellBtn" type="button">Крики: вкл</button>
+      <button class="ghost" id="voiceBtn" type="button">Озвучка</button>
+      <button class="ghost" id="fxBtn" type="button">Эффекты: вкл</button>
       <button class="ghost" id="resetBtn" type="button">Начать заново</button>
     </div>
   </header>
@@ -588,6 +611,16 @@ footer { text-align: center; font-size: 12px; color: var(--muted); padding-top: 
     <div class="modal-actions" id="modalActions"></div>
   </div>
 </div>
+<div class="fx-flash" id="fxFlash"></div>
+<div class="fx-layer" id="fx" aria-hidden="true"></div>
+<div class="modal" id="voiceModal" hidden>
+  <div class="modal-box voice-box" role="dialog" aria-modal="true" aria-labelledby="voiceTitle">
+    <h4 id="voiceTitle">Озвучка стримера</h4>
+    <p>Загрузите свои аудиофайлы с криками: mp3, ogg, wav или m4a, до 5 МБ. Звуки хранятся только в этом браузере. Где файла нет, кричит голос браузера.</p>
+    <div class="vrows" id="vrows"></div>
+    <div class="modal-actions"><button class="spin" type="button" id="voiceClose">Готово</button></div>
+  </div>
+</div>
 <div class="big" id="big" hidden>
   <canvas id="confetti"></canvas>
   <div class="big-inner">
@@ -624,7 +657,7 @@ function short(n) {
 
 /* ---------------- state ---------------- */
 const JP_SEED = 100000000;
-let S = { balance: START, base: START, spins: 0, best: 0, wagered: 0, paid: 0, history: [], sound: true, yell: true, tab: 'storm', bet: 10000000, heat: 0, jp: JP_SEED, jpSpins: 0, xp: 0 };
+let S = { balance: START, base: START, spins: 0, best: 0, wagered: 0, paid: 0, history: [], sound: true, yell: true, fx: true, tab: 'storm', bet: 10000000, heat: 0, jp: JP_SEED, jpSpins: 0, xp: 0 };
 try {
   const raw = localStorage.getItem(KEY);
   if (raw) {
@@ -658,7 +691,19 @@ const sfx = (() => {
     chip: () => tone(1100, .04, 'triangle', .04),
     win: () => [523, 659, 784].forEach((f, i) => tone(f, .2, 'triangle', .07, i * .09)),
     big: () => [523, 659, 784, 1047, 784, 1047, 1319].forEach((f, i) => tone(f, .28, 'triangle', .08, i * .12)),
-    lose: () => tone(150, .25, 'sawtooth', .025)
+    lose: () => tone(150, .25, 'sawtooth', .025),
+    airhorn: () => [0, .22, .44, .75].forEach((w, i) => [311, 415, 466].forEach((f) => tone(f, i === 3 ? .6 : .18, 'sawtooth', .035, w))),
+    monkey: () => {
+      if (!S.sound) return;
+      const a = ctx(); if (!a) return;
+      [[380, 700, 0], [380, 700, .22], [520, 1100, .46]].forEach(([f0, f1, w], i) => {
+        const t = a.currentTime + w, d = i === 2 ? .38 : .18;
+        const o = a.createOscillator(), g = a.createGain();
+        o.type = 'triangle'; o.frequency.setValueAtTime(f0, t); o.frequency.exponentialRampToValueAtTime(f1, t + d * .7);
+        g.gain.setValueAtTime(.07, t); g.gain.exponentialRampToValueAtTime(.0001, t + d);
+        o.connect(g); g.connect(a.destination); o.start(t); o.stop(t + d + .03);
+      });
+    }
   };
 })();
 
@@ -798,16 +843,18 @@ function settle(game, stake, win, note) {
       busyCount = Math.max(0, busyCount - 1);
       S.balance += amt; S.paid += amt; S.best = Math.max(S.best, amt);
       S.history.unshift({ g: 'jackpot', b: 0, w: amt, n: 'прогрессивный банк' });
-      save(); renderAll(); bigWin(amt, 0, 'ДЖЕКПОТ-ДРОП!');
+      save(); renderAll(); bigWin(amt, 0, 'ДЖЕКПОТ-ДРОП!'); celebrate(1000); voice('big', 'Джекпот! Джекпот!');
     }, 1500);
   }
   if (win > 0) { S.balance += win; S.paid += win; S.best = Math.max(S.best, win); }
   S.history.unshift({ g: game, b: stake, w: win, n: note });
   if (S.history.length > 40) S.history.length = 40;
   save(); renderAll();
-  if (win > 0 && win >= stake * 10) bigWin(win, win / stake);
-  else if (win > 0) { sfx.win(); toast('+' + short(win), 'good'); }
-  else sfx.lose();
+  const ratio = stake > 0 ? win / stake : 0;
+  if (win > 0 && win >= stake * 10) { bigWin(win, ratio); voice('big', 'Занос! Занос! Занос!'); }
+  else if (win > 0) { sfx.win(); toast('+' + short(win), 'good'); if (game !== 'storm') voice('win', ratio >= 2 ? 'Есть! Заносим!' : null); }
+  else { sfx.lose(); if (Math.random() < .35) voice('lose', null); }
+  if (win > 0) celebrate(ratio);
   setTimeout(checkBroke, 400);
 }
 function checkBroke() {
@@ -937,16 +984,223 @@ const games = {};
 
 /* ---------------- voice ---------------- */
 function speak(text) {
-  if (!S.yell || !('speechSynthesis' in window)) return;
+  if (!S.yell || !text || !('speechSynthesis' in window)) return;
   try {
     speechSynthesis.cancel();
     const u = new SpeechSynthesisUtterance(text);
-    u.lang = 'ru-RU'; u.rate = 1.05; u.pitch = 1.35; u.volume = 1;
+    u.lang = 'ru-RU'; u.rate = 1.2; u.pitch = 1.8; u.volume = 1;
     const v = speechSynthesis.getVoices().find((x) => /^ru/i.test(x.lang));
     if (v) u.voice = v;
     speechSynthesis.speak(u);
   } catch (e) { /* no speech */ }
 }
+/* custom voice clips, stored per browser in IndexedDB */
+const VOICE_SLOTS = [
+  ['A', 'Яблоки', 'Яблоки!'], ['G', 'Виноград', 'Виноград!'], ['B', 'Бананы', 'Бананы!'], ['P', 'Сливы', 'Сливы!'],
+  ['L', 'Лимоны', 'Лимоны!'], ['O', 'Апельсины', 'Апельсины!'], ['W', 'Арбузы', 'Арбузы!'], ['S', 'Клубника', 'Клубника!'],
+  ['*', 'Бонус 🍭', 'Бонус!'], ['big', 'Занос (от 10× ставки)', 'Занос! Занос! Занос!'], ['win', 'Выигрыш в других играх', 'Есть! Заносим!'], ['lose', 'Проигрыш (иногда)', '']
+];
+const clipURL = {};
+const clipDB = (() => {
+  let dbp = null;
+  const open = () => dbp || (dbp = new Promise((res, rej) => {
+    try {
+      const r = indexedDB.open('izumrud-voice', 1);
+      r.onupgradeneeded = () => r.result.createObjectStore('clips');
+      r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error);
+    } catch (e) { rej(e); }
+  }));
+  const run = (mode, fn) => open().then((db) => new Promise((res, rej) => {
+    const t = db.transaction('clips', mode), q = fn(t.objectStore('clips'));
+    t.oncomplete = () => res(q && q.result); t.onerror = () => rej(t.error);
+  }));
+  return {
+    get: (k) => run('readonly', (st) => st.get(k)),
+    put: (k, v) => run('readwrite', (st) => st.put(v, k)),
+    del: (k) => run('readwrite', (st) => st.delete(k))
+  };
+})();
+function playClip(k) {
+  if (!S.yell || !clipURL[k]) return false;
+  try { const a = new Audio(clipURL[k]); a.volume = 1; a.play().catch(() => {}); } catch (e) { return false; }
+  return true;
+}
+function voice(k, fallback) { if (!playClip(k)) speak(fallback); }
+function sayFruits(keys) {
+  const tts = [];
+  keys.forEach((k, i) => {
+    if (clipURL[k]) setTimeout(() => playClip(k), i * 450);
+    else { const slot = VOICE_SLOTS.find((x) => x[0] === k); if (slot) tts.push(slot[2]); }
+  });
+  if (tts.length) speak(tts.join(' '));
+}
+(async () => {
+  for (const [k] of VOICE_SLOTS) {
+    try { const b = await clipDB.get(k); if (b) clipURL[k] = URL.createObjectURL(b); } catch (e) { return; }
+  }
+  renderVoiceRows();
+})();
+function renderVoiceRows() {
+  const box = $('#vrows'); box.innerHTML = '';
+  VOICE_SLOTS.forEach(([k, label], i) => {
+    const row = document.createElement('div'); row.className = 'vrow';
+    const own = !!clipURL[k];
+    row.innerHTML = '<div><b></b><span class="st"></span></div><div class="vbtns"><label>Загрузить<input type="file" accept="audio/*" id="vfile' + i + '"></label><button type="button" data-a="play">▶</button><button type="button" data-a="del" aria-label="Удалить">✕</button></div>';
+    row.querySelector('b').textContent = label;
+    const st = row.querySelector('.st');
+    st.textContent = own ? 'свой звук загружен' : (k === 'lose' ? 'без звука' : 'голос браузера');
+    st.classList.toggle('own', own);
+    row.querySelector('[data-a=del]').hidden = !own;
+    row.querySelector('input').addEventListener('change', async (e) => {
+      const f = e.target.files && e.target.files[0]; if (!f) return;
+      if (f.size > 5 * 1024 * 1024) { toast('Файл больше 5 МБ, выберите покороче', 'bad'); return; }
+      if (clipURL[k]) URL.revokeObjectURL(clipURL[k]);
+      clipURL[k] = URL.createObjectURL(f);
+      try { await clipDB.put(k, f); toast('Звук «' + label + '» сохранён', 'good'); }
+      catch (err) { toast('Звук работает до перезагрузки: браузер не дал его сохранить', 'bad'); }
+      renderVoiceRows(); playClip(k);
+    });
+    row.querySelector('[data-a=play]').addEventListener('click', () => { const was = S.yell; S.yell = true; voice(k, VOICE_SLOTS[i][2]); S.yell = was; });
+    row.querySelector('[data-a=del]').addEventListener('click', async () => {
+      if (clipURL[k]) URL.revokeObjectURL(clipURL[k]);
+      delete clipURL[k];
+      try { await clipDB.del(k); } catch (e) { /* ignore */ }
+      renderVoiceRows();
+    });
+    box.appendChild(row);
+  });
+}
+$('#voiceBtn').addEventListener('click', () => { renderVoiceRows(); $('#voiceModal').hidden = false; $('#voiceClose').focus(); });
+$('#voiceClose').addEventListener('click', () => { $('#voiceModal').hidden = true; });
+
+/* ---------------- win effects ---------------- */
+const FX = (() => {
+  const layer = $('#fx');
+  const R = (a, b) => a + Math.random() * (b - a);
+  const pickOne = (arr) => arr[Math.floor(Math.random() * arr.length)];
+  const full = () => layer.childElementCount > 450;
+  function spawn(txt, x, y, size, kf, opts, cls) {
+    if (full()) return null;
+    const e = document.createElement('span');
+    e.className = 'fx' + (cls ? ' ' + cls : ''); e.textContent = txt;
+    e.style.left = x + 'px'; e.style.top = y + 'px'; e.style.fontSize = size + 'px';
+    layer.appendChild(e);
+    const a = e.animate(kf, Object.assign({ fill: 'both' }, opts));
+    a.onfinish = () => e.remove();
+    return e;
+  }
+  const RAIN = ['🍎', '🍇', '🍌', '🫐', '🍋', '🍊', '🍉', '🍓', '💵', '💰', '🤑', '🔥', '💎', '🪙', '🍭', '🐒'];
+  const CAPS = ['ЗАНОС!', 'ОГО-ГО!', 'ЛЕГЕНДА', 'ЖЁСТКО', 'ИКС ЛЕТИТ', 'ДОДЕП НЕ НУЖЕН', 'КРАСИВО', 'ИМБА', 'ЛЕТИМ!', 'ЭТО БАЗА', 'АААААА!', 'СЛИИИИВЫ!', 'ВИНОГРААААД!', 'БАНАНЫ!', 'ЯБЛОКИ!', 'ШОК', 'КАМБЭК', 'МАКСВИН?', 'ПОГНАЛИ'];
+  const COLORS = ['#ffe08a', '#ff4d8a', '#5fd39a', '#9b4dff', '#ff9a3c', '#4dc3ff', '#ffffff'];
+  return {
+    rain(n, pool = RAIN) {
+      const W = innerWidth, H = innerHeight;
+      for (let i = 0; i < n; i++) {
+        const sz = R(26, 64);
+        spawn(pickOne(pool), R(-20, W - 20), -sz - 10, sz,
+          [{ transform: 'translateY(0) rotate(0deg)' }, { transform: `translateY(${H + sz + 40}px) rotate(${R(-540, 540)}deg)` }],
+          { duration: R(1600, 3400), delay: R(0, 1400), easing: 'cubic-bezier(.4,0,.8,.6)' });
+      }
+    },
+    monkeys(n) {
+      const W = innerWidth, H = innerHeight;
+      for (let i = 0; i < n; i++) {
+        const sz = R(50, 110), y = H - sz - R(10, H * .45), ltr = Math.random() < .5, hops = 8;
+        const frames = [];
+        for (let f = 0; f <= hops; f++) {
+          const x = ltr ? -sz - 20 + (W + sz * 2 + 40) * f / hops : W + 20 - (W + sz * 2 + 40) * f / hops;
+          frames.push({ transform: `translate(${x}px, ${f % 2 ? -R(40, 90) : 0}px) scaleX(${ltr ? -1 : 1}) rotate(${f % 2 ? 12 : -12}deg)` });
+        }
+        spawn(pickOne(['🐒', '🐒', '🐵', '🦍', '🦧']), 0, y, sz, frames, { duration: R(2200, 3600), delay: i * 260, easing: 'linear' });
+      }
+      if (n) sfx.monkey();
+    },
+    bigMonkey() {
+      const sz = Math.min(innerWidth, innerHeight) * .38;
+      const t = (s, r) => ({ transform: `translate(-50%, -50%) scale(${s}) rotate(${r}deg)` });
+      spawn(pickOne(['🦍', '🐵', '🐒']), innerWidth / 2, innerHeight / 2, sz,
+        [t(0, -30), t(1.2, 12), t(.95, -12), t(1.15, 14), t(.95, -14), t(1.1, 10), t(0, 40)],
+        { duration: 2800, easing: 'ease-in-out' });
+    },
+    seeNoEvil() {
+      const W = innerWidth, H = innerHeight, sz = Math.min(W / 5, 120);
+      ['🙈', '🙉', '🙊'].forEach((m, i) => {
+        const x = W / 2 + (i - 1) * sz * 1.2 - sz / 2;
+        spawn(m, x, H, sz, [
+          { transform: 'translateY(0)' }, { transform: `translateY(${-sz * 1.3}px) rotate(-8deg)`, offset: .25 },
+          { transform: `translateY(${-sz * 1.1}px) rotate(8deg)`, offset: .5 }, { transform: `translateY(${-sz * 1.3}px) rotate(-8deg)`, offset: .75 },
+          { transform: 'translateY(0)' }
+        ], { duration: 2200, delay: i * 180, easing: 'ease-in-out' });
+      });
+    },
+    captions(n) {
+      const W = innerWidth, H = innerHeight;
+      for (let i = 0; i < n; i++) {
+        const e = spawn(pickOne(CAPS), R(W * .05, W * .6), R(H * .12, H * .78), R(28, Math.min(80, W / 7)),
+          [{ transform: 'scale(0) rotate(0deg)', opacity: 0 }, { transform: `scale(1.25) rotate(${R(-14, 14)}deg)`, opacity: 1, offset: .18 },
+           { transform: `scale(1) rotate(${R(-10, 10)}deg)`, opacity: 1, offset: .75 }, { transform: `scale(1.4) translateY(-40px)`, opacity: 0 }],
+          { duration: 1500, delay: i * 240, easing: 'ease-out' }, 'cap');
+        if (e) e.style.setProperty('--c', pickOne(COLORS));
+      }
+    },
+    firework(x, y, n = 22) {
+      const col = pickOne(COLORS);
+      for (let i = 0; i < n; i++) {
+        const a = (i / n) * Math.PI * 2, d = R(80, 190);
+        const e = spawn(pickOne(['●', '✦', '★']), x, y, R(10, 20),
+          [{ transform: 'translate(0,0) scale(1)', opacity: 1 }, { transform: `translate(${Math.cos(a) * d}px, ${Math.sin(a) * d + 40}px) scale(.3)`, opacity: 0 }],
+          { duration: R(800, 1200), easing: 'cubic-bezier(.1,.7,.3,1)' });
+        if (e) e.style.color = col;
+      }
+    },
+    fireworks(n) {
+      for (let i = 0; i < n; i++) setTimeout(() => { this.firework(R(innerWidth * .15, innerWidth * .85), R(innerHeight * .15, innerHeight * .5)); sfx.tick(); }, i * 320);
+    },
+    coins(n) {
+      const W = innerWidth, H = innerHeight;
+      for (let i = 0; i < n; i++) {
+        const dx = R(-W * .5, W * .5), up = -R(H * .45, H * .85);
+        spawn(pickOne(['🪙', '💵', '💰', '💎']), W / 2, H + 10, R(26, 48), [
+          { transform: 'translate(0,0) rotate(0deg)' }, { transform: `translate(${dx * .5}px, ${up}px) rotate(${R(-360, 360)}deg)`, offset: .45, easing: 'ease-in' },
+          { transform: `translate(${dx}px, 80px) rotate(${R(-720, 720)}deg)` }
+        ], { duration: R(1500, 2300), delay: R(0, 900), easing: 'ease-out' });
+      }
+    },
+    burst(sym, el) {
+      if (!el) return;
+      const r = el.getBoundingClientRect(), cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+      for (let i = 0; i < 14; i++) {
+        const a = R(0, Math.PI * 2), d = R(r.width * .4, r.width * .9);
+        spawn(sym, cx, cy, R(22, 44), [{ transform: 'translate(-50%,-50%) scale(.4)', opacity: 1 },
+          { transform: `translate(calc(-50% + ${Math.cos(a) * d}px), calc(-50% + ${Math.sin(a) * d}px)) scale(1.2) rotate(${R(-200, 200)}deg)`, opacity: 0 }],
+          { duration: R(700, 1100), easing: 'cubic-bezier(.1,.8,.3,1)' });
+      }
+    },
+    shake(px) {
+      const f = []; for (let i = 0; i < 10; i++) f.push({ transform: `translate(${R(-px, px)}px, ${R(-px, px)}px) rotate(${R(-.6, .6)}deg)` });
+      f.push({ transform: 'none' });
+      document.querySelector('.app').animate(f, { duration: 550, easing: 'linear' });
+    },
+    flash() { $('#fxFlash').animate([{ opacity: 0 }, { opacity: 1 }, { opacity: 0 }, { opacity: .7 }, { opacity: 0 }], { duration: 1000 }); },
+    hue() { document.querySelector('.stage').animate([{ filter: 'hue-rotate(0deg) saturate(1)' }, { filter: 'hue-rotate(180deg) saturate(1.8)' }, { filter: 'hue-rotate(360deg) saturate(1)' }], { duration: 1600 }); }
+  };
+})();
+function celebrate(x) {
+  if (!S.fx || !(x > 0)) return;
+  if (reduceMotion()) { FX.captions(1); return; }
+  if (x < 2) { FX.rain(10); FX.captions(1); if (Math.random() < .5) FX.monkeys(1); return; }
+  if (x < 10) { FX.rain(30); FX.monkeys(3); FX.seeNoEvil(); FX.captions(3); FX.coins(18); FX.shake(5); return; }
+  const k = x >= 100 ? 2 : 1;
+  sfx.airhorn();
+  FX.rain(60 * k); FX.monkeys(6 * k); FX.bigMonkey(); FX.seeNoEvil(); FX.captions(7 * k); FX.coins(35 * k);
+  FX.fireworks(6 * k); FX.shake(12); FX.flash(); FX.hue();
+  setTimeout(() => { FX.monkeys(4 * k); FX.captions(4); FX.rain(30 * k); }, 1800);
+}
+const fxBtn = $('#fxBtn');
+const renderFx = () => { fxBtn.textContent = 'Эффекты: ' + (S.fx ? 'вкл' : 'выкл'); };
+fxBtn.addEventListener('click', () => { S.fx = !S.fx; save(); renderFx(); if (S.fx) celebrate(3); });
+renderFx();
+
 const sleep = (ms) => new Promise((r) => setTimeout(r, reduceMotion() ? Math.min(ms, 120) : ms));
 
 /* ---------------- fruit storm ---------------- */
@@ -982,7 +1236,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, reduceMotion() ? Math.min
   pay.insertAdjacentHTML('beforeend', '<div class="pay"><span>🍭 ×4 и больше</span><span class="x">15 FS</span></div><div class="pay"><span>🍭 ×3 в фриспинах</span><span class="x">+5 FS</span></div>');
 
   let shoutRow = 0;
-  function shout(text, color, voice) {
+  function shout(text, color) {
     const s = document.createElement('div');
     s.className = 'shout'; s.textContent = text;
     s.style.setProperty('--c', color);
@@ -990,7 +1244,6 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, reduceMotion() ? Math.min
     s.style.setProperty('--y', ((shoutRow++ % 3) - 1) * 26 + '%');
     $('#shouts').appendChild(s);
     setTimeout(() => s.remove(), 1200);
-    if (voice) speak(voice);
   }
   function setMult(m, bump) {
     multEl.textContent = '×' + m;
@@ -1015,7 +1268,17 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, reduceMotion() ? Math.min
       for (const k of winners) { const n = cnt[k]; w += BY[k].p[n >= 12 ? 2 : n >= 10 ? 1 : 0] * bet; }
       w *= mult; win += w;
       for (let c = 0; c < C; c++) for (let r = 0; r < R; r++) if (winners.includes(grid[c][r])) cellAt(c, r).classList.add('win');
-      winners.forEach((k, i) => setTimeout(() => shout(BY[k].n, BY[k].c, i === 0 ? winners.map((x) => BY[x].v).join(' ') : null), i * 380));
+      const EMO = { L: '🍋', O: '🍊', B: '🍌', G: '🍇', A: '🍎', P: '🫐', W: '🍉', S: '🍓' };
+      winners.forEach((k, i) => setTimeout(() => {
+        shout(BY[k].n, BY[k].c);
+        if (S.fx && !reduceMotion()) {
+          const cells = []; for (let c = 0; c < C; c++) for (let r = 0; r < R; r++) if (grid[c][r] === k) cells.push(cellAt(c, r));
+          cells.slice(0, 4).forEach((cl) => FX.burst(EMO[k], cl));
+          if (mult >= 3) FX.shake(3 + Math.min(mult, 10));
+          if (mult >= 4) FX.captions(1);
+        }
+      }, i * 380));
+      sayFruits(winners);
       sfx.win();
       verdict.className = 'verdict good';
       verdict.textContent = 'Каскад ' + casc + ': ' + winners.map((k) => BY[k].n.replace('!', '').toLowerCase()).join(', ') + ' ×' + mult + ' → +' + short(w);
@@ -1044,7 +1307,8 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, reduceMotion() ? Math.min
 
   async function freeSpins(bet, n) {
     wrap.classList.add('fs');
-    shout('ФРИСПИНЫ!', '#ffe08a', 'Фриспины! Яблоки! Виноград! Бананы! Сливы!');
+    shout('ФРИСПИНЫ!', '#ffe08a'); voice('*', 'Фриспины!'); setTimeout(() => sayFruits(['A', 'G', 'B', 'P']), 900);
+    if (S.fx) { FX.monkeys(5); FX.captions(3); FX.coins(20); }
     sfx.big();
     await sleep(1500);
     let mult = 1, total = 0;
@@ -1052,7 +1316,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, reduceMotion() ? Math.min
       fsEl.textContent = 'Фриспин ' + (i + 1) + ' из ' + n + ' · всего +' + short(total);
       const r = await round(bet, mult);
       total += r.win; mult = r.mult;
-      if (r.stars >= 3 && n < 45) { n += 5; shout('+5 ФРИСПИНОВ', '#ff7ad9', 'Плюс пять!'); await sleep(900); }
+      if (r.stars >= 3 && n < 45) { n += 5; shout('+5 ФРИСПИНОВ', '#ff7ad9'); voice('*', 'Плюс пять!'); await sleep(900); }
       await sleep(250);
     }
     wrap.classList.remove('fs');
@@ -1079,7 +1343,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, reduceMotion() ? Math.min
       if (!r.win) { verdict.className = 'verdict bad'; verdict.textContent = 'Пусто. Разгон растёт, крути дальше'; }
       else verdict.textContent = 'Итого за спин: +' + short(r.win);
       if (r.stars >= 4) {
-        shout('БОНУС!', '#ff7ad9', 'Бонус!');
+        shout('БОНУС!', '#ff7ad9'); voice('*', 'Бонус!');
         await sleep(1300);
         total += await freeSpins(bet, 15); note = 'бонус с 🍭';
       }
@@ -1100,7 +1364,8 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, reduceMotion() ? Math.min
   $('#stormAuto').addEventListener('click', (e) => toggleAuto('storm', e.currentTarget));
   $('#stormYell').addEventListener('click', () => {
     ['A', 'G', 'B', 'P'].forEach((k, i) => setTimeout(() => shout(BY[k].n, BY[k].c), i * 450));
-    speak('Яблоки! Виноград! Бананы! Сливы!');
+    const was = S.yell; S.yell = true; sayFruits(['A', 'G', 'B', 'P']); S.yell = was;
+    if (S.fx) { FX.monkeys(2); FX.captions(2); }
   });
   games.storm = { spin: () => play(false) };
 })();
@@ -1483,7 +1748,7 @@ const renderSound = () => { soundBtn.textContent = 'Звук: ' + (S.sound ? 'в
 soundBtn.addEventListener('click', () => { S.sound = !S.sound; save(); renderSound(); sfx.click(); });
 const yellBtn = $('#yellBtn');
 const renderYell = () => { yellBtn.textContent = 'Крики: ' + (S.yell ? 'вкл' : 'выкл'); };
-yellBtn.addEventListener('click', () => { S.yell = !S.yell; save(); renderYell(); if (S.yell) speak('Яблоки!'); else if ('speechSynthesis' in window) speechSynthesis.cancel(); });
+yellBtn.addEventListener('click', () => { S.yell = !S.yell; save(); renderYell(); if (S.yell) voice('A', 'Яблоки!'); else if ('speechSynthesis' in window) speechSynthesis.cancel(); });
 
 $('#resetBtn').addEventListener('click', () => modal('Начать заново?', 'Баланс вернётся к 2 000 000 000, статистика и история очистятся.', [
   { label: 'Сбросить', primary: true, fn: () => {
@@ -1498,7 +1763,7 @@ document.addEventListener('keydown', (e) => {
   if (e.code !== 'Space' || e.repeat) return;
   const t = e.target;
   if (t && (t.tagName === 'INPUT' || t.tagName === 'BUTTON' || t.tagName === 'TEXTAREA')) return;
-  if (!$('#modal').hidden || !$('#big').hidden) return;
+  if (!$('#modal').hidden || !$('#big').hidden || !$('#voiceModal').hidden) return;
   e.preventDefault();
   games[S.tab] && games[S.tab].spin();
 });
